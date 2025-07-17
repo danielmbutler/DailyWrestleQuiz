@@ -8,22 +8,29 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
- val DarkColorScheme = darkColorScheme(
-    primary = WrestleGold,
-    onPrimary = GraphiteBlack,
-    background = GraphiteBlack,
-    onBackground = LightText,
-    surface = DarkSurface,
-    onSurface = LightText
+val DarkColorScheme = darkColorScheme(
+    primary = WrestleGold,             // same gold for primary
+    onPrimary = GraphiteBlack,         // text on primary: black
+    background = GraphiteBlack,        // #1C1C1E
+    onBackground = LightText,          // #F2F2F7 (light text)
+    surface = DarkSurface,             // #2C2C2E
+    onSurface = LightText,             // text on surface: light
+    secondary = LightSecondaryText,    // secondary text lighter
+    onSecondary = DarkSurface,
+    outline = DividerGray,
 )
 
- val LightColorScheme = lightColorScheme(
-    primary = LightPrimary,
-    onPrimary = DarkText,
-    background = LightBackground,
-    onBackground = DarkText,
-    surface = LightSurface,
-    onSurface = DarkText
+val LightColorScheme = lightColorScheme(
+    primary = LightPrimary,            // #FFCC4D (WrestleGold)
+    onPrimary = GraphiteBlack,         // Text on primary: dark for contrast
+    background = LightBackground,      // #F9F9FB (light bg)
+    onBackground = DarkText,           // #1C1C1E (dark text)
+    surface = LightSurface,            // #FFFFFF (white surface)
+    onSurface = DarkText,              // Text on surface: dark
+    secondary = MutedGray,             // For secondary text/buttons
+    onSecondary = LightSurface,        // Text on secondary color
+    outline = LightDivider,            // Dividers and outlines
+    // add other colors as needed
 )
 
 

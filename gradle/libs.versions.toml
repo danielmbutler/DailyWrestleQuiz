@@ -1,13 +1,13 @@
 [versions]
-agp = "8.3.1"
+agp = "8.6.1"
 kotlin = "1.9.20"
 compose = "1.5.4"
 compose-compiler = "1.5.4"
 compose-material3 = "1.1.2"
 androidx-activityCompose = "1.8.0"
-okio = "3.7.0"
 coroutines = "1.8.0"
-navigation = "2.7.0"
+navigation = "2.9.2"
+koin = "3.4.2"
 
 
 [libraries]
@@ -20,6 +20,9 @@ compose-foundation = { module = "androidx.compose.foundation:foundation", versio
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 
 
 [plugins]

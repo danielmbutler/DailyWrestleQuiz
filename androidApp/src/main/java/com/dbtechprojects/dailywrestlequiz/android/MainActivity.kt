@@ -7,15 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
-import com.dbtechprojects.dailywrestlequiz.data.model.Question
-import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
+import org.koin.mp.KoinPlatform.getKoin
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                  AppNavHost()
+                    AppNavHost()
                 }
             }
         }
@@ -38,12 +36,10 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = "home") {
 
         composable("home") {
-            HomeScreen(
-                viewModel = HomeViewModel(
-                    QuestionsUseCaseImpl()
-                ),
-                onNavigateToDetail = { navController.navigate("detail") }
-            )
+            val viewModel = getKoin().get<HomeViewModel>()
+            HomeScreen(viewModel = viewModel) {
+                navController.navigate("detail")
+            }
         }
 
         composable("detail") {
