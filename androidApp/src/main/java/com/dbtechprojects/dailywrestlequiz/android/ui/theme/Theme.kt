@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.sp
 val DarkColorScheme = darkColorScheme(
     primary = WrestleGold,             // same gold for primary
     onPrimary = GraphiteBlack,         // text on primary: black
-    background = GraphiteBlack,        // #1C1C1E
+    background = DarkSurface,        // #1C1C1E
     onBackground = LightText,          // #F2F2F7 (light text)
-    surface = DarkSurface,             // #2C2C2E
+    surface = GraphiteBlack,             // #2C2C2E
     onSurface = LightText,             // text on surface: light
     secondary = LightSecondaryText,    // secondary text lighter
     onSecondary = DarkSurface,
@@ -38,17 +38,24 @@ val AppTypography = Typography(
     headlineLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Bold,
-        fontSize = 28.sp,
-        color = LightText
+        fontSize = 42.sp,
     ),
     bodyLarge = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontFamily = FontFamily.SansSerif,
+        fontSize = 24.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontSize = 24.sp,
+        color = LightText
+    ),
+    bodySmall = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        color = LightText
     ),
     labelMedium = TextStyle(
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
-        color = MutedGray
     )
 )

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Daily\nWrestle Quiz</string>
+
+    <!-- Home Screen -->
+    <string name="home_todays_match">Today’s Match</string>
+    <string name="home_match_description">Answer wrestling trivia questions</string>
+    <string name="home_start_button">START</string>
+    <string name="home_streak_text">%1$d-Day Streak</string>
+
+    <!-- Modes -->
+    <string name="trivia_mode">Trivia Mode</string>
+    <string name="time_trials_mode">Time Trials Mode</string>
+    <string name="versus_mode">Versus Mode</string>
+
+    <!-- Quiz Screen -->
+    <string name="question_counter">%1$d/%2$d</string>
+    <string name="quiz_title">@string/app_name</string>
+    <string name="question_timer">%1$s</string>
+
+    <!-- Premium -->
+    <string name="unlock_premium">UNLOCK PREMIUM</string>
+    <string name="current_streak">Current Streak</string>
+</resources>
