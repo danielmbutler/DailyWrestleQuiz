@@ -7,13 +7,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.dbtechprojects.dailywrestlequiz.android.AppNavHost
 import com.dbtechprojects.dailywrestlequiz.android.MyApplicationTheme
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
-import com.dbtechprojects.dailywrestlequiz.data.model.Question
-import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
-import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 
 
 
@@ -50,17 +45,6 @@ fun HomeScreenPreview() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                viewModel = HomeViewModel(
-                    questionsUseCase = object : QuestionsUseCase {
-                        override fun getQuestions(quiz: Quiz): List<Question> {
-                            return emptyList()
-                        }
-
-                        override fun getRandomQuestion(): Question {
-                            return Question.getQuestions().first()
-                        }
-                    }
-                ),
                 onNavigateToDetail = {}
             )
         }

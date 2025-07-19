@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name">Daily\nWrestle Quiz</string>
+    <string name="app_name">Daily Wrestle Quiz</string>
 
     <!-- Home Screen -->
     <string name="home_todays_match">Today’s Match</string>
+    <string name="home_title">Daily\nWrestle Quiz</string>
     <string name="home_match_description">Answer wrestling trivia questions</string>
     <string name="home_start_button">START</string>
     <string name="home_streak_text">%1$d-Day Streak</string>

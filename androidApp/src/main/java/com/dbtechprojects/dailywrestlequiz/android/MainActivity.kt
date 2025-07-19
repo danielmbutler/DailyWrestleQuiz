@@ -12,7 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
+import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 
 class MainActivity : ComponentActivity() {
@@ -36,14 +39,20 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = "home") {
 
         composable("home") {
-            val viewModel = getKoin().get<HomeViewModel>()
-            HomeScreen(viewModel = viewModel) {
-                navController.navigate("detail")
+            HomeScreen() {
+                navController.navigate("question")
             }
         }
 
-        composable("detail") {
-
+        composable("question") {
+            val quiz = Quiz.getQuiz().first()
+            val viewModel: QuestionViewModel = getKoin().get(parameters = { parametersOf(quiz) })
+            QuestionScreen(viewModel){
+                navController.navigate("home") {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            }
         }
     }
 }
