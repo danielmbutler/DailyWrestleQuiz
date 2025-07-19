@@ -11,6 +11,7 @@ import com.dbtechprojects.dailywrestlequiz.android.MyApplicationTheme
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 
 
 @Preview(
@@ -86,7 +87,7 @@ fun QuestionScreenPreview() {
         ) {
 
             QuestionScreen(
-                QuestionViewModel.stub(),
+                QuestionViewModelImpl.stub(),
                 {}
             )
         }

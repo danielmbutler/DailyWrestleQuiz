@@ -1,9 +1,10 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.question
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,29 +13,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedText
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextHeight
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextWidth
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
+import com.dbtechprojects.dailywrestlequiz.android.ui.theme.IncorrectAnswerRed
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 
@@ -44,23 +44,19 @@ fun QuestionScreen(
     viewModel: QuestionViewModel,
     navHome: () -> Unit,
 ) {
-    val questions by viewModel.state.collectAsState()
     val progress by viewModel.progress.collectAsState()
     val remainingText by viewModel.timeRemainingText.collectAsState()
-
-    val currentIndex = remember { mutableIntStateOf(0) }
-
-    // Update when questions or currentIndex change
-    val currentQuestion = remember(questions, currentIndex.intValue) {
-        questions?.getOrNull(currentIndex.intValue)
-    }
+    val currentQuestion by viewModel.state.collectAsState()
+    val currentIndex by viewModel.currentQuestionNumber.collectAsState()
+    val questionsSize by viewModel.questionsAmount.collectAsState()
+    val selectedAnswer by viewModel.selectedAnswer.collectAsState()
 
     SurfaceSection(
         contentSpacedBy = 12
     ) {
         QuestionScreenHeaderRow(
             currentIndex,
-            questionsSize = questions?.size ?: 0
+            questionsSize = questionsSize
         )
         QuestionTimer(
             progress,
@@ -69,20 +65,42 @@ fun QuestionScreen(
         QuestionBox(
             question = currentQuestion?.question ?: ""
         )
+
         AnswerSection(
-            answers = Question.getAnswers(currentQuestion?.answers ?: "")
+            answers = Question.getAnswers(currentQuestion?.answers ?: ""),
+            onClickListener = { answer ->
+                viewModel.setAnswer(answer)
+            },
+            correctAnswer = currentQuestion?.answer ?: 0,
+            selectedAnswer = selectedAnswer
         )
+
+        if (selectedAnswer != null) {
+            val isCorrect = selectedAnswer == currentQuestion?.answer
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                PrimaryBodyLarge(
+                    if (isCorrect) {
+                        stringResource(R.string.question_answer_correct)
+                    } else
+                        stringResource(R.string.question_answer_incorrect)
+                )
+            }
+        }
+
+
     }
 
 }
 
 @Composable
 fun QuestionScreenHeaderRow(
-    currentIndex: MutableIntState,
+    currentIndex: Int,
     questionsSize: Int
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
-        PrimaryBodyLarge("${currentIndex.intValue + 1}/$questionsSize ")
+        PrimaryBodyLarge("${currentIndex}/$questionsSize ")
         PrimaryBodyLarge(stringResource(R.string.app_name))
     }
 }
@@ -131,7 +149,7 @@ fun QuestionBox(
             .padding(12.dp),
         contentAlignment = Alignment.Center
     ) {
-        AutoResizedText(
+        AutoResizedTextHeight(
             text = question,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
@@ -141,29 +159,46 @@ fun QuestionBox(
 
 @Composable
 fun AnswerSection(
-    answers: List<String>
+    answers: List<String>,
+    onClickListener: (Int) -> Unit,
+    selectedAnswer: Int?,
+    correctAnswer: Int,
 ) {
-    LazyColumn(
-        contentPadding = PaddingValues(12.dp)
-    ) {
-        items(answers.size) { index ->
-            ReusableRow(
-                onClick = {},
-                color = MaterialTheme.colorScheme.background
+    LazyColumn(contentPadding = PaddingValues(12.dp)) {
+        itemsIndexed(answers) { index, answer ->
+            val isCorrect = index == correctAnswer
+            val isSelected = index == selectedAnswer
+            val answered = selectedAnswer != null
+
+            val backgroundColor by animateColorAsState(
+                targetValue = when {
+                    selectedAnswer == null -> MaterialTheme.colorScheme.background
+                    isCorrect -> Color(0xFF7DBF74)// Green
+                    isSelected -> Color(0xFFC97878)// Red
+                    else -> MaterialTheme.colorScheme.background
+                },
+                animationSpec = tween(durationMillis = 500)
             )
-            {
-                Text(
-                    text = answers[index],
+            if (answered && !isCorrect && !isSelected) {
+                return@itemsIndexed
+            }
+            ReusableRow(
+                onClick = { if (selectedAnswer == null) onClickListener(index) },
+                color = backgroundColor
+            ) {
+                AutoResizedTextWidth(
+                    text = answer,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
-            if(index != answers.lastIndex){
-                Spacer(modifier = Modifier.size(24.dp))
+
+            if (index != answers.lastIndex) {
+                Spacer(modifier = Modifier.size(16.dp))
             }
         }
     }
 }
+
 
 

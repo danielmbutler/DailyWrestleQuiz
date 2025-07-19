@@ -6,13 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelWrapper
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import org.koin.core.parameter.parametersOf
@@ -45,9 +51,8 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         }
 
         composable("question") {
-            val quiz = Quiz.getQuiz().first()
-            val viewModel: QuestionViewModel = getKoin().get(parameters = { parametersOf(quiz) })
-            QuestionScreen(viewModel){
+            val quiz = remember { Quiz.getQuiz().first() }
+            QuestionScreen(getQuestionViewModel(quiz)) {
                 navController.navigate("home") {
                     popUpTo(navController.graph.startDestinationId)
                     launchSingleTop = true

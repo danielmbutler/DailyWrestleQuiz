@@ -39,7 +39,7 @@ fun PrimaryBodySmall(text: String) {
 }
 
 @Composable
-fun AutoResizedText(
+fun AutoResizedTextHeight(
     text: String,
     style: androidx.compose.ui.text.TextStyle,
     color: Color,
@@ -67,6 +67,50 @@ fun AutoResizedText(
         softWrap = true,
         onTextLayout = { result: TextLayoutResult ->
             if (result.didOverflowHeight) {
+                if (style.fontSize.isUnspecified) {
+                    resizedTextStyle = resizedTextStyle.copy(
+                        fontSize = defaultFontSize
+                    )
+                }
+                resizedTextStyle = resizedTextStyle.copy(
+                    fontSize = resizedTextStyle.fontSize * 0.95
+                )
+            } else {
+                shouldDraw = true
+            }
+        }
+    )
+}
+
+@Composable
+fun AutoResizedTextWidth(
+    text: String,
+    style: androidx.compose.ui.text.TextStyle,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    var resizedTextStyle by remember {
+        mutableStateOf(style)
+    }
+    var shouldDraw by remember {
+        mutableStateOf(false)
+    }
+
+    val defaultFontSize = MaterialTheme.typography.bodyLarge.fontSize
+
+    Text(
+        text = text,
+        color = color,
+        style = resizedTextStyle,
+        textAlign = TextAlign.Center,
+        modifier = modifier.drawWithContent {
+            if (shouldDraw) {
+                drawContent()
+            }
+        },
+        softWrap = false,
+        onTextLayout = { result: TextLayoutResult ->
+            if (result.didOverflowWidth) {
                 if (style.fontSize.isUnspecified) {
                     resizedTextStyle = resizedTextStyle.copy(
                         fontSize = defaultFontSize

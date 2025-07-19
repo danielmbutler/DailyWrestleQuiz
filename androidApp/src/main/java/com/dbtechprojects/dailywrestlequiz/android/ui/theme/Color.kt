@@ -15,3 +15,5 @@ val LightPrimary = Color(0xFFFFCC4D)
 val DarkText = Color(0xFF1C1C1E)
 val LightSecondaryText = Color(0xFF6C6C70)
 val LightDivider = Color(0xFFE5E5EA)
+
+val IncorrectAnswerRed = Color(0xFFD1462F)

@@ -19,6 +19,8 @@
     <string name="question_counter">%1$d/%2$d</string>
     <string name="quiz_title">@string/app_name</string>
     <string name="question_timer">%1$s</string>
+    <string name="question_answer_correct">Correct!</string>
+    <string name="question_answer_incorrect">Incorrect!</string>
 
     <!-- Premium -->
     <string name="unlock_premium">UNLOCK PREMIUM</string>
