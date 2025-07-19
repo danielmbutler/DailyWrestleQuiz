@@ -1,11 +1,15 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.question
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedText
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
@@ -47,7 +53,7 @@ fun QuestionScreen(
     SurfaceSection {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
 
         }
@@ -57,7 +63,12 @@ fun QuestionScreen(
         )
         QuestionTimer(
             progress,
-            remainingText)
+            remainingText
+        )
+
+        QuestionBox(
+            question = currentQuestion?.question ?: ""
+        )
     }
 
 }
@@ -77,14 +88,18 @@ fun QuestionScreenHeaderRow(
 fun QuestionTimer(
     progress: Float,
     remainingText: String
-){
-    Row(modifier = Modifier.fillMaxWidth()
-        .padding(top = 12.dp),
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         LinearProgressIndicator(
             progress = progress,
-            modifier = Modifier.fillMaxWidth(0.85f)
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
                 .height(6.dp)
                 .clip(RoundedCornerShape(2.dp)),
             color = MaterialTheme.colorScheme.primary,
@@ -98,6 +113,27 @@ fun QuestionTimer(
 
     }
 
+}
+
+@Composable
+fun QuestionBox(
+    question: String,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.25f)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.background)
+            .padding(12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        AutoResizedText(
+            text = question,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
 }
 
 

@@ -17,10 +17,7 @@ data class Question(
     companion object {
         fun getQuestions(): List<Question> {
             return listOf(
-                Question(0, "What year was AEW formed?", "2019, 2020, 2018", "AEW", "2020s", "", 0, "", 0, 1, 0),
-                Question(1, "What year was WCW formed?", "2019, 2020, 2018", "AEW", "2010s", "", 0, "", 0, 1, 0),
-                Question(2, "What year was AEW formed?", "2019, 2020, 2018, 2017, 2016, 2015", "AEW", "90s", "Royal Rumble", 0, "", 0, 1, 0),
-                Question(3, "What year was World Wrestling Trivia formed?", "2019, 2020, 2018", "AEW", "90s", "Royal Rumble", 24, "", 0, 1, 0)
+                Question(3, "In the 2019 Elimination Chamber Match which superstar eliminated Samoa Joe ?", "2019, 2020, 2018", "AEW", "90s", "Royal Rumble", 24, "", 0, 1, 0)
             )
         }
 
