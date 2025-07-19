@@ -4,12 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedText
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
+import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 
 
@@ -49,14 +55,9 @@ fun QuestionScreen(
         questions?.getOrNull(currentIndex.intValue)
     }
 
-
-    SurfaceSection {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
-        ) {
-
-        }
+    SurfaceSection(
+        contentSpacedBy = 12
+    ) {
         QuestionScreenHeaderRow(
             currentIndex,
             questionsSize = questions?.size ?: 0
@@ -65,9 +66,11 @@ fun QuestionScreen(
             progress,
             remainingText
         )
-
         QuestionBox(
             question = currentQuestion?.question ?: ""
+        )
+        AnswerSection(
+            answers = Question.getAnswers(currentQuestion?.answers ?: "")
         )
     }
 
@@ -133,6 +136,33 @@ fun QuestionBox(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
+    }
+}
+
+@Composable
+fun AnswerSection(
+    answers: List<String>
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(12.dp)
+    ) {
+        items(answers.size) { index ->
+            ReusableRow(
+                onClick = {},
+                color = MaterialTheme.colorScheme.background
+            )
+            {
+                Text(
+                    text = answers[index],
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if(index != answers.lastIndex){
+                Spacer(modifier = Modifier.size(24.dp))
+            }
+        }
     }
 }
 

@@ -2,7 +2,9 @@ package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
+import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
+import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -47,6 +49,16 @@ class QuestionViewModel(
             _progress.value = elapsed.toFloat() / totalTime.coerceAtLeast(1)
             _timeRemainingText.value = timerUtils.getTimeRemainingText(elapsed, quiz.timeLimit)
             delay(1000)
+        }
+    }
+
+    companion object{
+        fun stub() : QuestionViewModel {
+            return QuestionViewModel(
+                questionsUseCase = QuestionUseCaseStub(),
+                quiz = Quiz.getQuiz().first(),
+                timerUtils = TimerUtils()
+            )
         }
     }
 }

@@ -22,6 +22,7 @@ data class Question(
         }
 
         fun getAnswers(answers: String): List<String> {
+            if (answers.isEmpty()) return emptyList()
             val split = answers.split(",").map { it.trim() }
             return split.mapIndexed { index, answer -> "${getAnswerLetter(index)}. $answer" }
         }

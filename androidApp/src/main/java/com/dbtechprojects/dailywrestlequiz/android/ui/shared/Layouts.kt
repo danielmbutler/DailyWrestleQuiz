@@ -89,7 +89,10 @@ fun ReusableRow(
 }
 
 @Composable
-fun SurfaceSection(content: @Composable () -> Unit){
+fun SurfaceSection(
+    contentSpacedBy: Int = 0,
+    content: @Composable () -> Unit
+){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,7 +104,8 @@ fun SurfaceSection(content: @Composable () -> Unit){
                 .fillMaxSize()
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(12.dp)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(contentSpacedBy.dp),
         ) {
             content.invoke()
         }

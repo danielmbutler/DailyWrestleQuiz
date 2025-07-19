@@ -17,3 +17,13 @@ class QuestionsUseCaseImpl: QuestionsUseCase {
         return Question.getQuestions().random()
     }
 }
+
+class QuestionUseCaseStub : QuestionsUseCase{
+    override fun getQuestions(quiz: Quiz): List<Question> {
+        return Question.getQuestions()
+    }
+
+    override fun getRandomQuestion(): Question {
+        return Question.getQuestions().first()
+    }
+}
