@@ -4,4 +4,5 @@ object NavRoutes {
     const val HOME = "home"
     const val QUIZ = "quiz"
     const val QUESTION = "question"
+    const val WHEEL_OF_TRIVIA = "wheel_of_trivia"
 }

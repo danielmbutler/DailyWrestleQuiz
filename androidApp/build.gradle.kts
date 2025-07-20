@@ -47,4 +47,7 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.koin.android)
     debugImplementation(libs.compose.ui.tooling)
+
+    // Spin Wheel
+    implementation("com.github.commandiron:SpinWheelCompose:1.1.1")
 }

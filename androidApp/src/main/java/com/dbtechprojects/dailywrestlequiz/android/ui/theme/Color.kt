@@ -1,5 +1,9 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.theme
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 
 val GraphiteBlack = Color(0xFF1C1C1E)
@@ -17,6 +21,10 @@ val LightSecondaryText = Color(0xFF6C6C70)
 val LightDivider = Color(0xFFE5E5EA)
 
 // Specific Game Colors
-
 val CorrectGreen = Color(0xFF22C55E)
 val IncorrectRed = Color(0xFFC97878)
+
+val QuestionBoxWhite= Color(0xFFF8F9FA)
+
+@Composable
+fun Color.asState(): State<Color> = remember(this) { mutableStateOf(this) }

@@ -19,6 +19,7 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.NavRoutes
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelWrapper
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
@@ -50,7 +51,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         composable(NavRoutes.HOME) {
             HomeScreen(
                 onNavigateToDaily = {
-                    navController.navigate(NavRoutes.QUESTION)
+                    navController.navigate(NavRoutes.WHEEL_OF_TRIVIA)
                 },
                 onNavigateToTrivia = {
                     navController.navigate(NavRoutes.QUIZ)
@@ -62,6 +63,10 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                     // TODO: Add navigation route
                 }
             )
+        }
+
+        composable(NavRoutes.WHEEL_OF_TRIVIA) {
+            WheelOfTriviaScreen(getQuizViewModel())
         }
 
         composable(NavRoutes.QUIZ) {

@@ -12,13 +12,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PrimaryButton(
     modifier: Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit, text: String) {
     Button(
         modifier = modifier,
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor =
+               if(enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+            ,
             contentColor = MaterialTheme.colorScheme.onBackground
         )
     ) {

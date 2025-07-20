@@ -177,10 +177,10 @@ fun AnswerSection(
 
             val backgroundColor by animateColorAsState(
                 targetValue = when {
-                    selectedAnswer == null -> MaterialTheme.colorScheme.background
+                    selectedAnswer == null -> MaterialTheme.colorScheme.inverseSurface
                     isCorrect -> CorrectGreen// Green
                     isSelected -> IncorrectRed// Red
-                    else -> MaterialTheme.colorScheme.background
+                    else -> MaterialTheme.colorScheme.inverseSurface
                 },
                 animationSpec = tween(durationMillis = 500)
             )

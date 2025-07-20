@@ -1,5 +1,9 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.shared
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,21 +14,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
+import com.dbtechprojects.dailywrestlequiz.android.R
 
 
 @Composable
 fun PrimaryBodyLarge(
     text: String,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Unspecified
+    textAlign: TextAlign = TextAlign.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Text(
         text = text, modifier = modifier,
         style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
         textAlign = textAlign,
     )
 }
@@ -124,4 +132,24 @@ fun AutoResizedTextWidth(
             }
         }
     )
+}
+
+@Composable
+fun ScreenCenterTitle(
+    text: String,
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp),
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            color = MaterialTheme.colorScheme.onBackground,
+            text = text,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp),
+            textAlign = TextAlign.Center
+        )
+    }
 }
