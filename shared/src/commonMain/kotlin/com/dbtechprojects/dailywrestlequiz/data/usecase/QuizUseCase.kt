@@ -12,3 +12,10 @@ class QuizUseCaseImpl : QuizUseCase {
         return Quiz.getQuiz()
     }
 }
+
+class QuizUseCaseStub: QuizUseCase {
+
+    override fun getQuizzes(): List<Quiz> {
+        return Quiz.getQuiz()
+    }
+}

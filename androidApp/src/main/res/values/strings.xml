@@ -22,8 +22,11 @@
     <string name="question_answer_correct">Correct!</string>
     <string name="question_answer_incorrect">Incorrect!</string>
     <string name="question_answer_out_of_time">Counted Out!</string>
+    <string name="next">Next</string>
+
 
     <!-- Premium -->
     <string name="unlock_premium">UNLOCK PREMIUM</string>
     <string name="current_streak">Current Streak</string>
+    <string name="current_score">"Current Score: "</string>
 </resources>

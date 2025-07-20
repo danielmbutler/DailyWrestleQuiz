@@ -22,6 +22,7 @@ interface QuestionViewModel {
     val timeRemainingText: StateFlow<String>
     val progress: StateFlow<Float>
     val selectedAnswer: MutableStateFlow<Int?>
+    val currentScore: MutableStateFlow<Int>
 
     fun setAnswer(answer: Int)
 
@@ -54,6 +55,10 @@ class QuestionViewModelImpl(
     override val selectedAnswer: MutableStateFlow<Int?>
         get() =  _selectedAnswer
 
+    private val _currentScore = MutableStateFlow(0)
+    override val currentScore: MutableStateFlow<Int>
+        get() = _currentScore
+
     private var answered = false
 
     init {
@@ -67,6 +72,9 @@ class QuestionViewModelImpl(
         if (!answered) {
             answered = true
             _selectedAnswer.value = answer
+            if (answer == state.value?.answer) {
+                _currentScore.value += 1
+            }
         }
     }
 
@@ -104,7 +112,7 @@ class QuestionViewModelImpl(
           return // question has been answered in allotted time
         }
         // time is over
-        _selectedAnswer.value = -1
+        setAnswer(-1)
     }
 
     companion object {

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,39 +55,48 @@ fun QuestionScreen(
     val currentIndex by viewModel.currentQuestionNumber.collectAsState()
     val questionsSize by viewModel.questionsAmount.collectAsState()
     val selectedAnswer by viewModel.selectedAnswer.collectAsState()
+    val currentScore by viewModel.currentScore.collectAsState()
 
-    SurfaceSection(
-        contentSpacedBy = 12
-    ) {
-        QuestionScreenHeaderRow(
-            currentIndex,
-            questionsSize = questionsSize
-        )
-        QuestionTimer(
-            progress,
-            remainingText
-        )
-        QuestionBox(
-            question = currentQuestion?.question ?: ""
-        )
-
-        AnswerSection(
-            answers = Question.getAnswers(currentQuestion?.answers ?: ""),
-            onClickListener = { answer ->
-                viewModel.setAnswer(answer)
-            },
-            correctAnswer = currentQuestion?.answer ?: 0,
-            selectedAnswer = selectedAnswer
-        )
-
-        if (selectedAnswer != null) {
-            ResultStatement(
-                isCorrect = selectedAnswer == currentQuestion?.answer,
-                isOutOfTime = selectedAnswer == -1
+    Box(modifier = Modifier.fillMaxSize()) {
+        SurfaceSection {
+            QuestionScreenHeaderRow(
+                currentIndex,
+                questionsSize = questionsSize
             )
-            NextButton { viewModel.requestNextQuestion() }
+            QuestionTimer(
+                progress,
+                remainingText
+            )
+            QuestionBox(
+                question = currentQuestion?.question ?: ""
+            )
+
+            AnswerSection(
+                answers = Question.getAnswers(currentQuestion?.answers ?: ""),
+                onClickListener = { answer ->
+                    viewModel.setAnswer(answer)
+                },
+                correctAnswer = currentQuestion?.answer ?: 0,
+                selectedAnswer = selectedAnswer
+            )
+
+            if (selectedAnswer != null) {
+                ResultStatement(
+                    isCorrect = selectedAnswer == currentQuestion?.answer,
+                    isOutOfTime = selectedAnswer == -1
+                )
+                NextButton { viewModel.requestNextQuestion() }
+            }
         }
+        CurrentScore(
+            currentScore = currentScore,
+            questionsSize = questionsSize,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp)
+        )
     }
+
 }
 
 @Composable
@@ -244,6 +254,21 @@ fun NextButton(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun CurrentScore(
+    currentScore: Int,
+    questionsSize: Int,
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        PrimaryBodyLarge(stringResource(R.string.current_score) + "${currentScore}/$questionsSize ")
     }
 }
 
