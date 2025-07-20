@@ -34,7 +34,8 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextWidt
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
-import com.dbtechprojects.dailywrestlequiz.android.ui.theme.IncorrectAnswerRed
+import com.dbtechprojects.dailywrestlequiz.android.ui.theme.CorrectGreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.theme.IncorrectRed
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 
@@ -77,14 +78,18 @@ fun QuestionScreen(
 
         if (selectedAnswer != null) {
             val isCorrect = selectedAnswer == currentQuestion?.answer
+            val outOfTime = selectedAnswer == -1
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 PrimaryBodyLarge(
                     if (isCorrect) {
                         stringResource(R.string.question_answer_correct)
-                    } else
+                    } else if(outOfTime) {
+                        stringResource(R.string.question_answer_out_of_time)
+                    } else {
                         stringResource(R.string.question_answer_incorrect)
+                    }
                 )
             }
         }
@@ -173,8 +178,8 @@ fun AnswerSection(
             val backgroundColor by animateColorAsState(
                 targetValue = when {
                     selectedAnswer == null -> MaterialTheme.colorScheme.background
-                    isCorrect -> Color(0xFF7DBF74)// Green
-                    isSelected -> Color(0xFFC97878)// Red
+                    isCorrect -> CorrectGreen// Green
+                    isSelected -> IncorrectRed// Red
                     else -> MaterialTheme.colorScheme.background
                 },
                 animationSpec = tween(durationMillis = 500)

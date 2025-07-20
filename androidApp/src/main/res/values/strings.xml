@@ -21,6 +21,7 @@
     <string name="question_timer">%1$s</string>
     <string name="question_answer_correct">Correct!</string>
     <string name="question_answer_incorrect">Incorrect!</string>
+    <string name="question_answer_out_of_time">Counted Out!</string>
 
     <!-- Premium -->
     <string name="unlock_premium">UNLOCK PREMIUM</string>

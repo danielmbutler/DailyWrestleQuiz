@@ -86,6 +86,8 @@ class QuestionViewModelImpl(
             }
           break
         }
+        // time is over
+        _selectedAnswer.value = -1
     }
 
     companion object {
