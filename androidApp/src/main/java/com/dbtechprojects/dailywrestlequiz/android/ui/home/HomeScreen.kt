@@ -25,7 +25,10 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
 
 @Composable
 fun HomeScreen(
-    onNavigateToDetail: () -> Unit
+    onNavigateToDaily: () -> Unit,
+    onNavigateToTrivia: () -> Unit,
+    onNavigateToTimeTrial: () -> Unit,
+    onNavigateToVersus: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -35,10 +38,14 @@ fun HomeScreen(
     ) {
         AppTitle()
         HomeCallToAction {
-            onNavigateToDetail.invoke()
+            onNavigateToDaily.invoke()
         }
         StreakSection()
-        Options()
+        Options(
+            onNavigateToTrivia,
+            onNavigateToTimeTrial,
+            onNavigateToVersus
+        )
     }
 }
 
@@ -98,7 +105,11 @@ fun StreakSection() {
 }
 
 @Composable
-fun Options() {
+fun Options(
+    onNavigateToTrivia: () -> Unit,
+    onNavigateToTimeTrial: () -> Unit,
+    onNavigateToVersus: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(0.75f),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -107,19 +118,19 @@ fun Options() {
             drawable = R.drawable.gamepad,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.trivia_mode),
-            onClick = {}
+            onClick = {onNavigateToTrivia.invoke()}
         )
         ImageRow(
             drawable = R.drawable.timer,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.time_trials_mode),
-            onClick = {}
+            onClick = {onNavigateToTimeTrial}
         )
         ImageRow(
             drawable = R.drawable.group,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.versus_mode),
-            onClick = {}
+            onClick = {onNavigateToVersus}
         )
     }
 

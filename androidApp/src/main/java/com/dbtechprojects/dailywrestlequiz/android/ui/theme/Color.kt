@@ -18,5 +18,5 @@ val LightDivider = Color(0xFFE5E5EA)
 
 // Specific Game Colors
 
-val CorrectGreen = Color(0xFF7DBF74)
+val CorrectGreen = Color(0xFF22C55E)
 val IncorrectRed = Color(0xFFC97878)

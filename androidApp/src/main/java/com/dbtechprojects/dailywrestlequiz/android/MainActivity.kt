@@ -15,10 +15,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dbtechprojects.dailywrestlequiz.android.ui.NavRoutes
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelWrapper
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import org.koin.core.parameter.parametersOf
@@ -42,18 +45,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = NavRoutes.HOME) {
 
-        composable("home") {
-            HomeScreen() {
-                navController.navigate("question")
-            }
+        composable(NavRoutes.HOME) {
+            HomeScreen(
+                onNavigateToDaily = {
+                    navController.navigate(NavRoutes.QUESTION)
+                },
+                onNavigateToTrivia = {
+                    navController.navigate(NavRoutes.QUIZ)
+                },
+                onNavigateToTimeTrial = {
+                    // TODO: Add navigation route
+                },
+                onNavigateToVersus = {
+                    // TODO: Add navigation route
+                }
+            )
         }
 
-        composable("question") {
+        composable(NavRoutes.QUIZ) {
+            QuizScreen(getQuizViewModel())
+        }
+
+        composable(NavRoutes.QUESTION) {
             val quiz = remember { Quiz.getQuiz().first() }
             QuestionScreen(getQuestionViewModel(quiz)) {
-                navController.navigate("home") {
+                navController.navigate(NavRoutes.HOME) {
                     popUpTo(navController.graph.startDestinationId)
                     launchSingleTop = true
                 }

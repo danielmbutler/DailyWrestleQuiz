@@ -27,9 +27,11 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun PrimaryBorderedBox(content: @Composable () -> Unit){
+fun PrimaryBorderedBox(
+    maxWidth: Float = 0.75f,
+    content: @Composable () -> Unit){
     Box(
-        modifier = Modifier.fillMaxWidth(0.75f)
+        modifier = Modifier.fillMaxWidth(maxWidth)
         .border(
                 width = 2.dp,
                 color = MaterialTheme.colorScheme.primary,
