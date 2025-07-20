@@ -24,6 +24,8 @@ interface QuestionViewModel {
     val selectedAnswer: MutableStateFlow<Int?>
 
     fun setAnswer(answer: Int)
+
+    fun requestNextQuestion()
 }
 
 class QuestionViewModelImpl(
@@ -68,6 +70,21 @@ class QuestionViewModelImpl(
         }
     }
 
+    override fun requestNextQuestion() {
+        requestQuestion()
+        resetState()
+    }
+
+    private fun resetState(){
+        answered = false
+        selectedAnswer.value = null
+        _currentQuestionNumber.value += 1
+        _progress.value = 0f
+        viewModelScope.launch {
+            startTimer(quiz.timeLimit)
+        }
+    }
+
     private fun requestQuestion() {
         viewModelScope.launch {
             _state.value = questionsUseCase.getRandomQuestion()
@@ -84,7 +101,7 @@ class QuestionViewModelImpl(
                 delay(1000)
                 continue
             }
-          break
+          return // question has been answered in allotted time
         }
         // time is over
         _selectedAnswer.value = -1
