@@ -1,5 +1,6 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.quiz
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun WheelOfTriviaScreen(
     quizViewModel: QuizViewModel,
+    navigateToQuestion: (Quiz) -> Unit
 ) {
     val quizzes by quizViewModel.quizzes.collectAsState()
     val isLoading by quizViewModel.isLoading.collectAsState()
@@ -61,8 +63,8 @@ fun WheelOfTriviaScreen(
             return@SurfaceSection
         }
         val state = rememberSpinWheelState(
-            rotationPerSecond = 0.25f,
-            pieCount = quizzes.size
+            pieCount = quizzes.size,
+            durationMillis = 7000
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,14 +80,16 @@ fun WheelOfTriviaScreen(
                         stringResource(R.string.spin)
                     } else {
                         stringResource(R.string.spinning)
-                    }
-                ,
+                    },
                 enabled = !isSpinning,
                 onClick = {
                     if (!isSpinning) {
                         isSpinning = true
                         scope.launch {
-                            state.spin()
+                            state.spin {
+                                val quiz = quizzes[it]
+                                navigateToQuestion(quiz)
+                            }
                         }
                     }
                 }
@@ -117,6 +121,7 @@ fun WheelSection(
         }
     }
 }
+
 @Composable
 fun Wheel(state: SpinWheelState, quizzes: List<Quiz>) {
 

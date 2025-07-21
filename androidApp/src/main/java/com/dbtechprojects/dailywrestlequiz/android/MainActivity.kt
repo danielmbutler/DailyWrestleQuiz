@@ -3,6 +3,7 @@ package com.dbtechprojects.dailywrestlequiz.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dbtechprojects.dailywrestlequiz.android.ui.NavRoutes
+import com.dbtechprojects.dailywrestlequiz.android.ui.NavViewModel
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
@@ -29,6 +31,8 @@ import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 
 class MainActivity : ComponentActivity() {
+    private val navViewModel: NavViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavHost()
+                    AppNavHost(navViewModel = navViewModel)
                 }
             }
         }
@@ -45,7 +49,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController = rememberNavController()) {
+fun AppNavHost(
+    navController: NavHostController = rememberNavController(),
+    navViewModel: NavViewModel
+) {
     NavHost(navController = navController, startDestination = NavRoutes.HOME) {
 
         composable(NavRoutes.HOME) {
@@ -66,19 +73,27 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         }
 
         composable(NavRoutes.WHEEL_OF_TRIVIA) {
-            WheelOfTriviaScreen(getQuizViewModel())
+            WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = {
+                navViewModel.setSelectedQuiz(it)
+                navController.navigate(NavRoutes.QUESTION)
+            })
         }
 
         composable(NavRoutes.QUIZ) {
-            QuizScreen(getQuizViewModel())
+            QuizScreen(getQuizViewModel(),navigateToQuestion = {
+                navViewModel.setSelectedQuiz(it)
+                navController.navigate(NavRoutes.QUESTION)
+            })
         }
 
         composable(NavRoutes.QUESTION) {
-            val quiz = remember { Quiz.getQuiz().first() }
-            QuestionScreen(getQuestionViewModel(quiz)) {
-                navController.navigate(NavRoutes.HOME) {
-                    popUpTo(navController.graph.startDestinationId)
-                    launchSingleTop = true
+            val quiz = remember { navViewModel.getSelectedQuiz() }
+            quiz?.let { it1 ->
+                QuestionScreen(getQuestionViewModel(it1)) {
+                    navController.navigate(NavRoutes.HOME) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
                 }
             }
         }

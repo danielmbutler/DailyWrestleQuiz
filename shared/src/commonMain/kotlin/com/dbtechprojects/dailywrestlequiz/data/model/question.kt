@@ -17,7 +17,9 @@ data class Question(
     companion object {
         fun getQuestions(): List<Question> {
             return listOf(
-                Question(3, "In the 2019 Elimination Chamber Match which superstar eliminated Samoa Joe ?", "2019, 2020, 2018", "AEW", "90s", "Royal Rumble", 24, "", 0, 1, 0)
+                Question(3, "Which of the below superstars had the most eliminations in the 1999 Royal Rumble match ?",
+                    "Kane, Steve Austin, The Rock, The Undertaker",
+                    "AEW", "90s", "Royal Rumble", 24, "", 0, 1, 0)
             )
         }
 
