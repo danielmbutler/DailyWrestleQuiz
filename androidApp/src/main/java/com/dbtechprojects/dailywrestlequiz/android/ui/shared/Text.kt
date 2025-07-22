@@ -1,6 +1,7 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.shared
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
@@ -96,6 +98,7 @@ fun AutoResizedTextWidth(
     style: androidx.compose.ui.text.TextStyle,
     color: Color,
     modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Center
 ) {
     var resizedTextStyle by remember {
         mutableStateOf(style)
@@ -110,7 +113,7 @@ fun AutoResizedTextWidth(
         text = text,
         color = color,
         style = resizedTextStyle,
-        textAlign = TextAlign.Center,
+        textAlign = textAlign,
         modifier = modifier.drawWithContent {
             if (shouldDraw) {
                 drawContent()
@@ -137,6 +140,7 @@ fun AutoResizedTextWidth(
 @Composable
 fun ScreenCenterTitle(
     text: String,
+    subtitle: String? = null
 ){
     Row(
         modifier = Modifier
@@ -144,12 +148,26 @@ fun ScreenCenterTitle(
             .padding(24.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
-        Text(
-            color = MaterialTheme.colorScheme.onBackground,
-            text = text,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp),
-            textAlign = TextAlign.Center
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                color = MaterialTheme.colorScheme.onBackground,
+                text = text,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(top = 24.dp, bottom =
+                    if (subtitle == null) 24.dp else 12.dp),
+                textAlign = TextAlign.Center
+            )
+            subtitle?.let {
+                AutoResizedTextWidth(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+
     }
 }

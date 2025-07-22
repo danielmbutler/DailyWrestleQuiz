@@ -1,4 +1,4 @@
-package com.dbtechprojects.dailywrestlequiz.android.ui.quiz
+package com.dbtechprojects.dailywrestlequiz.android.ui.timetrial
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -17,56 +17,52 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.FullScreenLoadingSpinner
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ScreenCenterTitle
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
-import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModel
+import com.dbtechprojects.dailywrestlequiz.android.ui.theme.WrestleGold
+import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModel
 
 
 @Composable
-fun QuizScreen(
-    quizViewModel: QuizViewModel,
-    navigateToQuestion: (Quiz) -> Unit
+fun TimeTrialListScreen(
+    timeTrialListViewModel: TimeTrialListViewModel,
+    navigateToTimeTrial: (id: Int) -> Unit
 ) {
-    val quizzes by quizViewModel.quizzes.collectAsState()
-    val isLoading by quizViewModel.isLoading.collectAsState()
+    val trials by timeTrialListViewModel.timeTrials.collectAsState()
 
     SurfaceSection {
-      ScreenCenterTitle(
-          stringResource(R.string.wrestling_trivia),
-          stringResource(R.string.step_into_the_ring_of_knowledge)
-      )
-        if (isLoading) {
-            FullScreenLoadingSpinner()
-            return@SurfaceSection
-        }
+        ScreenCenterTitle(
+            stringResource(R.string.time_trials_title),
+            stringResource(R.string.how_fast_can_you_answer)
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            QuizSection(quizzes, onNavigateToQuestion = navigateToQuestion)
+            TimeTrialsSection(trials, navigate = navigateToTimeTrial)
         }
 
     }
 }
 
 
-
 @Composable
-fun QuizSection(
-    quizzes: List<Quiz>,
-    onNavigateToQuestion: (Quiz) -> Unit
+fun TimeTrialsSection(
+    list: List<TimeTrial>,
+    navigate: (id: Int) -> Unit
 ) {
     AnimatedVisibility(
         visible = true,
@@ -81,23 +77,23 @@ fun QuizSection(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                itemsIndexed(quizzes) { index, it ->
+                itemsIndexed(list) { index, it ->
                     ReusableRow(
                         color = UiUtils.hexToColor(it.color),
                         onClick = {
-                            onNavigateToQuestion(it)
+                            navigate(it.id)
                         }
                     ) {
                         PrimaryBodyLarge(
                             it.name,
-                            modifier= Modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(12.dp),
                             textAlign = TextAlign.Center,
-                            color = androidx.compose.ui.graphics.Color.White
+                            color = Color.White
                         )
                     }
-                    if (index != quizzes.lastIndex) {
+                    if (index != list.lastIndex) {
                         Spacer(modifier = Modifier.size(16.dp))
                     }
                 }

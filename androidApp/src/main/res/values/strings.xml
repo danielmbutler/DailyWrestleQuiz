@@ -24,6 +24,9 @@
     <string name="question_answer_out_of_time">Counted Out!</string>
     <string name="next">Next</string>
 
+    <!-- Time Trials Screen -->
+    <string name="time_trials_title">Time Trials</string>
+
 
     <!-- Premium -->
     <string name="unlock_premium">UNLOCK PREMIUM</string>
@@ -33,4 +36,6 @@
     <string name="wheel_of_trivia">Wheel Of Trivia</string>
     <string name="spin">Spin</string>
     <string name="spinning">Spinning</string>
+    <string name="how_fast_can_you_answer">How Fast Can You Answer?</string>
+    <string name="step_into_the_ring_of_knowledge">Step Into the Ring of Knowledge</string>
 </resources>

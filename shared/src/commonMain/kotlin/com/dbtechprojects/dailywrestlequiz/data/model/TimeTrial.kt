@@ -4,6 +4,7 @@ data class TimeTrial (
     val name: String,
     val id: Int,
     val highScore: String,
+    val color: String,
 ){
 
     companion object{

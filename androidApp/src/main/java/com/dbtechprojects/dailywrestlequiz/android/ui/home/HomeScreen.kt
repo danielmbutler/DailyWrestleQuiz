@@ -124,13 +124,13 @@ fun Options(
             drawable = R.drawable.timer,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.time_trials_mode),
-            onClick = {onNavigateToTimeTrial}
+            onClick = {onNavigateToTimeTrial.invoke()}
         )
         ImageRow(
             drawable = R.drawable.group,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.versus_mode),
-            onClick = {onNavigateToVersus}
+            onClick = {onNavigateToVersus.invoke()}
         )
     }
 

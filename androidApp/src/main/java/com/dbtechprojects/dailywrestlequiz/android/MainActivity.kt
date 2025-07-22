@@ -22,9 +22,11 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelWrapper
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import org.koin.core.parameter.parametersOf
@@ -64,7 +66,7 @@ fun AppNavHost(
                     navController.navigate(NavRoutes.QUIZ)
                 },
                 onNavigateToTimeTrial = {
-                    // TODO: Add navigation route
+                    navController.navigate(NavRoutes.TIME_TRIAL)
                 },
                 onNavigateToVersus = {
                     // TODO: Add navigation route
@@ -80,10 +82,17 @@ fun AppNavHost(
         }
 
         composable(NavRoutes.QUIZ) {
-            QuizScreen(getQuizViewModel(),navigateToQuestion = {
+            QuizScreen(getQuizViewModel(), navigateToQuestion = {
                 navViewModel.setSelectedQuiz(it)
                 navController.navigate(NavRoutes.QUESTION)
             })
+        }
+        composable(NavRoutes.TIME_TRIAL) {
+            TimeTrialListScreen(
+                getTimeTrialListViewModel(), navigateToTimeTrial =
+                    {
+
+                    })
         }
 
         composable(NavRoutes.QUESTION) {

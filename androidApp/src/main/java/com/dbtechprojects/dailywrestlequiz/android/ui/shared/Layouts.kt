@@ -96,6 +96,7 @@ fun ReusableRow(
                 onClick.invoke()
             }
             .padding(12.dp),
+
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
 

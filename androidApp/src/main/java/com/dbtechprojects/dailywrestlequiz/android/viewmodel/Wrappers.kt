@@ -7,11 +7,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
+import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModelImpl
 import org.koin.mp.KoinPlatform.getKoin
 
 
@@ -56,3 +59,23 @@ fun getQuizViewModel(): QuizViewModel {
         QuizViewModelFactory()
     )
 }
+
+class TimeTrialViewModelWrapper(
+    timeTrialUseCase: TimeTrialUseCase
+) : ViewModel(), TimeTrialListViewModel by TimeTrialListViewModelImpl(timeTrialUseCase)
+
+class TimeTrialListViewModelFactory() : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return TimeTrialViewModelWrapper(
+            getKoin().get(),
+        ) as T
+    }
+}
+
+@Composable
+fun getTimeTrialListViewModel(): TimeTrialListViewModel {
+    return viewModel(factory =
+        TimeTrialListViewModelFactory()
+    )
+}
+

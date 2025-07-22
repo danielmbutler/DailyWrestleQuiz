@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 
-val GraphiteBlack = Color(0xFF1C1C1E)
+val GraphiteBlack = Color(0xFF1a1a1a)
 val DarkSurface = Color(0xFF2C2C2E)
 val WrestleGold = Color(0xFFe3b85b)
 val LightText = Color(0xFFF2F2F7)

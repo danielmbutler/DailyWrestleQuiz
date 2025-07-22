@@ -18,22 +18,26 @@ class TimeTrialUseCaseImpl : TimeTrialUseCase {
             TimeTrial(
                 id = 1,
                 name = "WWE Champions",
-                highScore = ""
+                highScore = "",
+                color = "#e3b85b"
             ),
             TimeTrial(
                 id = 2,
                 name = "WCW Champions",
-                highScore = ""
+                highScore = "",
+                color = "#1E3A8A"
             ),
             TimeTrial(
                 id = 3,
                 name = "ECW Champions",
-                highScore = ""
+                highScore = "",
+                color = "#4B0082"
             ),
             TimeTrial(
                 id = 4,
                 name = "Royal Rumble Winners",
-                highScore = ""
+                highScore = "",
+                color = "#B45309"
             ),
         )
     }
