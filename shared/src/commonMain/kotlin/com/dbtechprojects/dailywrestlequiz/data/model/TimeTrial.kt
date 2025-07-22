@@ -5,6 +5,7 @@ data class TimeTrial (
     val id: Int,
     val highScore: String,
     val color: String,
+    val timeLimit: Int = 480 // 8 minutes
 ){
 
     companion object{

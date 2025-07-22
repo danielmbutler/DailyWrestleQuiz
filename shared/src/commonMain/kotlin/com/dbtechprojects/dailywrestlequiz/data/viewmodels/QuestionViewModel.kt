@@ -1,11 +1,16 @@
 package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
+import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
+import com.dbtechprojects.dailywrestlequiz.data.di.StubArgPersistence
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
+import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
+import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel.Companion.ARG_QUIZ_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,11 +32,16 @@ interface QuestionViewModel {
     fun setAnswer(answer: Int)
 
     fun requestNextQuestion()
+
+    companion object {
+        const val ARG_QUIZ_ID = "quizId"
+    }
 }
 
 class QuestionViewModelImpl(
     private val questionsUseCase: QuestionsUseCase,
-    private val quiz: Quiz,
+    private val quizUseCase: QuizUseCase,
+    private val quizId: ArgPersistence<Int>,
     private val timerUtils: TimerUtils
 ) : BaseViewModel(), QuestionViewModel {
 
@@ -39,7 +49,7 @@ class QuestionViewModelImpl(
     private val _state = MutableStateFlow<Question?>(null)
     override val state: StateFlow<Question?> = _state.asStateFlow()
 
-    private val _questionsAmount = MutableStateFlow(quiz.questions)
+    private val _questionsAmount = MutableStateFlow(0)
     override val questionsAmount: StateFlow<Int> = _questionsAmount
 
     private val _currentQuestionNumber = MutableStateFlow(1)
@@ -61,10 +71,18 @@ class QuestionViewModelImpl(
 
     private var answered = false
 
+    private var quiz: Quiz? = null
+
     init {
         requestQuestion()
         viewModelScope.launch {
-            startTimer(quiz.timeLimit)
+            quizId.get(ARG_QUIZ_ID)?.let {
+                quizUseCase.getQuiz(it)?.let { quiz ->
+                    _questionsAmount.value = quiz.questions
+                    this@QuestionViewModelImpl.quiz = quiz
+                    startTimer(quiz.timeLimit)
+                }
+            }
         }
     }
 
@@ -89,7 +107,7 @@ class QuestionViewModelImpl(
         _currentQuestionNumber.value += 1
         _progress.value = 0f
         viewModelScope.launch {
-            startTimer(quiz.timeLimit)
+            quiz?.timeLimit?.let { startTimer(it) }
         }
     }
 
@@ -105,7 +123,7 @@ class QuestionViewModelImpl(
         for (elapsed in 0..totalTime) {
             if (_selectedAnswer.value == null){
                 _progress.value = elapsed.toFloat() / totalTime.coerceAtLeast(1)
-                _timeRemainingText.value = timerUtils.getTimeRemainingText(elapsed, quiz.timeLimit)
+                _timeRemainingText.value = timerUtils.getTimeRemainingText(elapsed, quiz?.timeLimit ?: 0)
                 delay(1000)
                 continue
             }
@@ -119,8 +137,9 @@ class QuestionViewModelImpl(
         fun stub(): QuestionViewModel {
             return QuestionViewModelImpl(
                 questionsUseCase = QuestionUseCaseStub(),
-                quiz = Quiz.getQuiz().first(),
-                timerUtils = TimerUtils()
+                quizId = StubArgPersistence<Int>(Quiz.getQuiz().first().id),
+                timerUtils = TimerUtils(),
+                quizUseCase = QuizUseCaseStub()
             )
         }
     }

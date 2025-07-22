@@ -13,9 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dbtechprojects.dailywrestlequiz.android.ui.NavRoutes
 import com.dbtechprojects.dailywrestlequiz.android.ui.NavViewModel
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
@@ -23,6 +25,7 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.ArgPersistenceImplementation
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelWrapper
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
@@ -76,15 +79,13 @@ fun AppNavHost(
 
         composable(NavRoutes.WHEEL_OF_TRIVIA) {
             WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = {
-                navViewModel.setSelectedQuiz(it)
-                navController.navigate(NavRoutes.QUESTION)
+                navController.navigate("${NavRoutes.QUESTION}/$it")
             })
         }
 
         composable(NavRoutes.QUIZ) {
             QuizScreen(getQuizViewModel(), navigateToQuestion = {
-                navViewModel.setSelectedQuiz(it)
-                navController.navigate(NavRoutes.QUESTION)
+                navController.navigate("${NavRoutes.QUESTION}/$it")
             })
         }
         composable(NavRoutes.TIME_TRIAL) {
@@ -95,14 +96,21 @@ fun AppNavHost(
                     })
         }
 
-        composable(NavRoutes.QUESTION) {
-            val quiz = remember { navViewModel.getSelectedQuiz() }
-            quiz?.let { it1 ->
-                QuestionScreen(getQuestionViewModel(it1)) {
-                    navController.navigate(NavRoutes.HOME) {
-                        popUpTo(navController.graph.startDestinationId)
-                        launchSingleTop = true
-                    }
+        composable(
+            route = "${NavRoutes.QUESTION}/{quizId}",
+            arguments = listOf(
+                navArgument("quizId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { entry ->
+
+           val args = ArgPersistenceImplementation<Int>(savedStateHandle = entry.savedStateHandle )
+
+            QuestionScreen(getQuestionViewModel(args)) {
+                navController.navigate(NavRoutes.HOME) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
                 }
             }
         }

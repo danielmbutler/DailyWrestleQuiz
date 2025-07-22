@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun WheelOfTriviaScreen(
     quizViewModel: QuizViewModel,
-    navigateToQuestion: (Quiz) -> Unit
+    navigateToQuestion: (quizId: Int) -> Unit
 ) {
     val quizzes by quizViewModel.quizzes.collectAsState()
     val isLoading by quizViewModel.isLoading.collectAsState()
@@ -88,7 +88,7 @@ fun WheelOfTriviaScreen(
                         scope.launch {
                             state.spin {
                                 val quiz = quizzes[it]
-                                navigateToQuestion(quiz)
+                                navigateToQuestion(quiz.id)
                             }
                         }
                     }

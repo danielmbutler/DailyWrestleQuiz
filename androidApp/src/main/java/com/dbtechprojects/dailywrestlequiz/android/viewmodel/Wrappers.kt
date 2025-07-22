@@ -1,9 +1,11 @@
 package com.dbtechprojects.dailywrestlequiz.android.viewmodel
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
@@ -19,25 +21,29 @@ import org.koin.mp.KoinPlatform.getKoin
 
 
 class QuestionViewModelWrapper(
-    quiz: Quiz,
+    quizUseCase: QuizUseCase,
     questionsUseCase: QuestionsUseCase,
+    argPersistence: ArgPersistence<Int>,
     timerUtils: TimerUtils
-) : ViewModel(), QuestionViewModel by QuestionViewModelImpl(questionsUseCase, quiz, timerUtils)
+) : ViewModel(), QuestionViewModel by QuestionViewModelImpl(
+    questionsUseCase, quizUseCase, argPersistence, timerUtils
+)
 
-class QuestionViewModelFactory(private val quiz: Quiz) : ViewModelProvider.Factory {
+class QuestionViewModelFactory(private val argPersistence: ArgPersistence<Int>) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return QuestionViewModelWrapper(
-            quiz,
-            getKoin().get(),
-            getKoin().get()
+            quizUseCase = getKoin().get(),
+            questionsUseCase = getKoin().get(),
+            timerUtils = getKoin().get(),
+            argPersistence = argPersistence
         ) as T
     }
 }
 
 @Composable
-fun getQuestionViewModel(quiz: Quiz): QuestionViewModel {
+fun getQuestionViewModel(argPersistence: ArgPersistence<Int>): QuestionViewModel {
     return viewModel(factory =
-        QuestionViewModelFactory(quiz)
+        QuestionViewModelFactory(argPersistence)
     )
 }
 

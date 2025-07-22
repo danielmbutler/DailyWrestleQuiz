@@ -35,7 +35,7 @@ import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModel
 @Composable
 fun QuizScreen(
     quizViewModel: QuizViewModel,
-    navigateToQuestion: (Quiz) -> Unit
+    navigateToQuestion: (quizId: Int) -> Unit
 ) {
     val quizzes by quizViewModel.quizzes.collectAsState()
     val isLoading by quizViewModel.isLoading.collectAsState()
@@ -66,7 +66,7 @@ fun QuizScreen(
 @Composable
 fun QuizSection(
     quizzes: List<Quiz>,
-    onNavigateToQuestion: (Quiz) -> Unit
+    onNavigateToQuestion: (Int) -> Unit
 ) {
     AnimatedVisibility(
         visible = true,
@@ -85,7 +85,7 @@ fun QuizSection(
                     ReusableRow(
                         color = UiUtils.hexToColor(it.color),
                         onClick = {
-                            onNavigateToQuestion(it)
+                            onNavigateToQuestion(it.id)
                         }
                     ) {
                         PrimaryBodyLarge(
