@@ -10,4 +10,8 @@ class TimerUtils {
         return "$minutes:$secondsText"
     }
 
+    fun calculateLinearProgress(timeElapsed: Int, totalTime: Int): Float {
+        return timeElapsed.toFloat() / totalTime.coerceAtLeast(1)
+    }
+
 }

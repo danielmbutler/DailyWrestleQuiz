@@ -140,7 +140,8 @@ fun AutoResizedTextWidth(
 @Composable
 fun ScreenCenterTitle(
     text: String,
-    subtitle: String? = null
+    subtitle: String? = null,
+    bottomPadding: Int = 24
 ){
     Row(
         modifier = Modifier
@@ -154,7 +155,7 @@ fun ScreenCenterTitle(
                 text = text,
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(top = 24.dp, bottom =
-                    if (subtitle == null) 24.dp else 12.dp),
+                    if (subtitle == null) bottomPadding.dp else (bottomPadding / 2).dp),
                 textAlign = TextAlign.Center
             )
             subtitle?.let {
@@ -162,7 +163,7 @@ fun ScreenCenterTitle(
                     color = MaterialTheme.colorScheme.onBackground,
                     text = subtitle,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 24.dp),
+                    modifier = Modifier.padding(bottom = bottomPadding.dp),
                     textAlign = TextAlign.Center
                 )
             }

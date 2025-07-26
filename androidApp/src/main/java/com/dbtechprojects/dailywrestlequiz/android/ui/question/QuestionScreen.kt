@@ -36,6 +36,7 @@ import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextHeight
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextWidth
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.QuestionTimer
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
 import com.dbtechprojects.dailywrestlequiz.android.ui.theme.CorrectGreen
@@ -110,36 +111,7 @@ fun QuestionScreenHeaderRow(
     }
 }
 
-@Composable
-fun QuestionTimer(
-    progress: Float,
-    remainingText: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        LinearProgressIndicator(
-            progress = progress,
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .height(6.dp)
-                .clip(RoundedCornerShape(2.dp)),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.background
-        )
-        Text(
-            text = remainingText,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onBackground
-        )
 
-    }
-
-}
 
 @Composable
 fun QuestionBox(

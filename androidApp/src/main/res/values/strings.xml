@@ -28,7 +28,6 @@
     <string name="time_trials_title">Time Trials</string>
 
 
-    <!-- Premium -->
     <string name="unlock_premium">UNLOCK PREMIUM</string>
     <string name="current_streak">Current Streak</string>
     <string name="current_score">"Current Score: "</string>
@@ -37,5 +36,12 @@
     <string name="spin">Spin</string>
     <string name="spinning">Spinning</string>
     <string name="how_fast_can_you_answer">How Fast Can You Answer?</string>
+    <string name="name_all">Name all</string>
     <string name="step_into_the_ring_of_knowledge">Step Into the Ring of Knowledge</string>
+    <string name="found">Found</string>
+    <string name="wrestler_name">Wrestler Name</string>
+    <string name="show_entries">Show Entries</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="better_luck_next_time">Better luck next time!</string>
+    <string name="share_result">Share Result</string>
 </resources>

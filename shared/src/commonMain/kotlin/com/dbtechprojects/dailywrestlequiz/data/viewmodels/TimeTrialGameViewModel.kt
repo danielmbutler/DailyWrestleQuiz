@@ -19,10 +19,13 @@ import kotlinx.coroutines.launch
 interface TimeTrialGameViewModel {
     val foundItems: StateFlow<List<String>>
     val timeRemainingText: StateFlow<String>
+    val progress: StateFlow<Float>
     val events: Flow<TimeTrialGameViewModelImpl.UiEvent>
     val gameOver: StateFlow<Boolean>
     val scoreText: StateFlow<String>
     fun sendAttempt(attempt: String)
+    val  win: StateFlow<Boolean>
+    val quizName: StateFlow<String>
 
     companion object {
         const val ARG_TIME_TRIAL_ID = "timeTrialId"
@@ -33,7 +36,7 @@ interface TimeTrialGameViewModel {
 class TimeTrialGameViewModelImpl(
     private val timeTrialUseCase: TimeTrialUseCase,
     private val timerUtils: TimerUtils,
-    timeTrialId: ArgPersistence<Int>
+    timeTrialId: ArgPersistence<Int>,
 ) : BaseViewModel(), TimeTrialGameViewModel {
 
     private var timeTrialItemsSize = 0
@@ -42,6 +45,11 @@ class TimeTrialGameViewModelImpl(
     private var elapsedTime = 0
     private val _timeRemainingText = MutableStateFlow("")
     override val timeRemainingText: StateFlow<String> = _timeRemainingText.asStateFlow()
+
+    private val _progress = MutableStateFlow(0f)
+
+    override val progress: StateFlow<Float>
+        get() = _progress
 
     private val _eventChannel = Channel<UiEvent>()
     override val events = _eventChannel.receiveAsFlow()
@@ -57,6 +65,13 @@ class TimeTrialGameViewModelImpl(
     override val foundItems: StateFlow<List<String>>
         get() = _foundItems
 
+    private val _quizName = MutableStateFlow("")
+    override val quizName: StateFlow<String> get() = _quizName
+
+    private val _win = MutableStateFlow(false)
+    override val win: StateFlow<Boolean> get() = _win
+
+
     init {
         timeTrialId.get(ARG_TIME_TRIAL_ID)?.let { id ->
             timeTrialUseCase.getTimeTrial(id = id)?.let { timeTrial ->
@@ -64,6 +79,7 @@ class TimeTrialGameViewModelImpl(
                     _foundItems.value = namesAndAliases.map { "******" }
                     originalGameData = namesAndAliases.toMutableMap()
                     timeTrialItemsSize = namesAndAliases.size
+                    _quizName.value = timeTrial.name
                     _score.value = "0/$timeTrialItemsSize"
                 }
                 viewModelScope.launch {
@@ -86,7 +102,6 @@ class TimeTrialGameViewModelImpl(
 
         originalGameData!!.forEach { (key, value) ->
             // check values for direct match (wrestler names)
-            index++
             if (attempt.equals(key, true) ||
                 // check alias
                 value.find { it.equals(attempt, true) } != null
@@ -94,6 +109,7 @@ class TimeTrialGameViewModelImpl(
                 answerKey = key
                 return@forEach
             }
+            index++
         }
 
         if (answerKey.isNotBlank()) {
@@ -122,6 +138,7 @@ class TimeTrialGameViewModelImpl(
 
     private fun endgame() {
         _gameOver.value = true
+        _win.value = true
         viewModelScope.launch(Dispatchers.IO) {
             timeTrialUseCase.saveTime(elapsedTime)
         }
@@ -132,6 +149,7 @@ class TimeTrialGameViewModelImpl(
     ) {
         for (elapsed in 0..totalTime) {
             elapsedTime = elapsed
+            _progress.value = timerUtils.calculateLinearProgress(elapsed, totalTime)
             _timeRemainingText.value = timerUtils.getTimeRemainingText(elapsed, totalTime)
             delay(1000)
         }

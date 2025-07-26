@@ -26,5 +26,8 @@ val IncorrectRed = Color(0xFFC97878)
 
 val QuestionBoxWhite= Color(0xFFF8F9FA)
 
+// chip group
+val ChipGroupBackgroundLight = Color(0xFFE5E5EA)
+
 @Composable
 fun Color.asState(): State<Color> = remember(this) { mutableStateOf(this) }

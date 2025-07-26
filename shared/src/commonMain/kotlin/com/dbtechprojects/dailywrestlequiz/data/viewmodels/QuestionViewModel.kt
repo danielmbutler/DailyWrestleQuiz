@@ -122,7 +122,7 @@ class QuestionViewModelImpl(
     ) {
         for (elapsed in 0..totalTime) {
             if (_selectedAnswer.value == null){
-                _progress.value = elapsed.toFloat() / totalTime.coerceAtLeast(1)
+                _progress.value = timerUtils.calculateLinearProgress(elapsed, totalTime)
                 _timeRemainingText.value = timerUtils.getTimeRemainingText(elapsed, quiz?.timeLimit ?: 0)
                 delay(1000)
                 continue

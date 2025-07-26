@@ -18,7 +18,8 @@ val DarkColorScheme = darkColorScheme(
     secondary = LightSecondaryText,    // secondary text lighter
     onSecondary = DarkSurface,
     outline = DividerGray,
-    inverseSurface = DarkSurface
+    inverseSurface = DarkSurface,
+    tertiary = LightSecondaryText
 )
 
 val LightColorScheme = lightColorScheme(
@@ -31,7 +32,9 @@ val LightColorScheme = lightColorScheme(
     secondary = MutedGray,             // For secondary text/buttons
     onSecondary = LightSurface,        // Text on secondary color
     outline = LightDivider,
-    inverseSurface =  QuestionBoxWhite
+    inverseSurface =  QuestionBoxWhite,
+    tertiary = ChipGroupBackgroundLight
+
     // add other colors as needed
 )
 
