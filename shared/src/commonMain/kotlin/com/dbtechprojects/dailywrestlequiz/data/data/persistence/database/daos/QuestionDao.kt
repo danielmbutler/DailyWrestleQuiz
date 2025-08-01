@@ -16,4 +16,7 @@ interface QuestionDao {
 
     @Query("SELECT count(*) FROM Question")
     suspend fun count(): Int
+
+    @Query("UPDATE Question SET timesAnswered = timesAnswered + 1 WHERE question_id = :questionId")
+    suspend fun updateTimesAnswered(questionId: Int)
 }

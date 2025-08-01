@@ -1,5 +1,7 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.shared
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -16,12 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isUnspecified
-import com.dbtechprojects.dailywrestlequiz.android.R
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -36,6 +42,41 @@ fun PrimaryBodyLarge(
         style = MaterialTheme.typography.bodyLarge,
         color = color,
         textAlign = textAlign,
+    )
+}
+
+@Composable
+fun PrimaryBodyLargeAnimateSize(
+    text: String,
+    shouldAnimate: Boolean,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onBackground
+) {
+    val initialFont = MaterialTheme.typography.bodyLarge.fontSize.value
+    var targetFont by remember { mutableFloatStateOf(initialFont) }
+
+    val animatedFontSize by animateFloatAsState(
+        targetValue = targetFont,
+        animationSpec = tween(durationMillis = 150),
+        label = "fontSizeAnimation"
+    )
+
+    // Trigger the animation whenever shouldAnimate becomes true
+    LaunchedEffect(shouldAnimate) {
+        if (shouldAnimate) {
+            targetFont = initialFont * 1.25f
+            delay(150) // grow duration
+            targetFont = initialFont
+        }
+    }
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyLarge,
+        fontSize = animatedFontSize.sp,
+        color = color,
+        textAlign = textAlign
     )
 }
 

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextHeight
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextWidth
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLargeAnimateSize
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.QuestionTimer
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
@@ -84,14 +86,14 @@ fun QuestionScreen(
             if (selectedAnswer != null) {
                 ResultStatement(
                     isCorrect = selectedAnswer == currentQuestion?.answer,
-                    isOutOfTime = selectedAnswer == -1
+                    isOutOfTime = selectedAnswer == -1,
+                    currentScore = currentScore
                 )
                 NextButton { viewModel.requestNextQuestion() }
             }
         }
         CurrentScore(
             currentScore = currentScore,
-            questionsSize = questionsSize,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(24.dp)
@@ -110,7 +112,6 @@ fun QuestionScreenHeaderRow(
         PrimaryBodyLarge(stringResource(R.string.app_name))
     }
 }
-
 
 
 @Composable
@@ -149,10 +150,10 @@ fun AnswerSection(
 
             val backgroundColor by animateColorAsState(
                 targetValue = when {
-                    selectedAnswer == null -> MaterialTheme.colorScheme.inverseSurface
+                    selectedAnswer == null -> MaterialTheme.colorScheme.background
                     isCorrect -> CorrectGreen// Green
                     isSelected -> IncorrectRed// Red
-                    else -> MaterialTheme.colorScheme.inverseSurface
+                    else -> MaterialTheme.colorScheme.background
                 },
                 animationSpec = tween(durationMillis = 500)
             )
@@ -181,20 +182,33 @@ fun AnswerSection(
 fun ResultStatement(
     isCorrect: Boolean,
     isOutOfTime: Boolean,
+    currentScore: Int
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        PrimaryBodyLarge(
-            if (isCorrect) {
-                stringResource(R.string.question_answer_correct)
-            } else if (isOutOfTime) {
-                stringResource(R.string.question_answer_out_of_time)
-            } else {
-                stringResource(R.string.question_answer_incorrect)
+        Column {
+            PrimaryBodyLarge(
+                if (isCorrect) {
+                    stringResource(R.string.question_answer_correct)
+                } else if (isOutOfTime) {
+                    stringResource(R.string.question_answer_out_of_time)
+                } else {
+                    stringResource(R.string.question_answer_incorrect)
+                }
+            )
+            Row {
+                PrimaryBodyLarge(
+                    text = stringResource(R.string.current_score)
+                )
+                PrimaryBodyLargeAnimateSize(
+                    shouldAnimate = isCorrect,
+                    text = "$currentScore"
+                )
             }
-        )
+        }
+
     }
 }
 
@@ -232,7 +246,6 @@ fun NextButton(
 @Composable
 fun CurrentScore(
     currentScore: Int,
-    questionsSize: Int,
     modifier: Modifier
 ) {
     Row(
@@ -240,7 +253,7 @@ fun CurrentScore(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.Bottom
     ) {
-        PrimaryBodyLarge(stringResource(R.string.current_score) + "${currentScore}/$questionsSize ")
+        PrimaryBodyLarge(stringResource(R.string.current_score) + "${currentScore}")
     }
 }
 
