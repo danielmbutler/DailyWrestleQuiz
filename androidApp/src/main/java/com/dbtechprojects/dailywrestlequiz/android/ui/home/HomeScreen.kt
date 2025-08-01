@@ -22,9 +22,11 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     onNavigateToDaily: () -> Unit,
     onNavigateToTrivia: () -> Unit,
     onNavigateToTimeTrial: () -> Unit,

@@ -38,6 +38,12 @@ class TimeTrialUseCaseImpl : TimeTrialUseCase {
             highScore = "",
             color = "#B45309"
         ),
+//        TimeTrial(
+//            id = 5,
+//            name = "Test",
+//            highScore = "",
+//            color = "#B45309"
+//        )
     )
 
     override fun getTimeTrials(): List<TimeTrial> {

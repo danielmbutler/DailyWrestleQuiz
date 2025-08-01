@@ -1,8 +1,16 @@
 package com.dbtechprojects.dailywrestlequiz.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
+
+@Entity
+@Serializable
 data class Question(
-    val id: Int ,
+    @PrimaryKey(autoGenerate = false)
+    val question_id: Int,
     val question: String,
     val answers: String,
     val company: String,
@@ -15,6 +23,15 @@ data class Question(
     val timesAnswered: Int = 0
 ){
     companion object {
+
+        fun fromJson(json: String): List<Question> {
+            return try {
+                Json.decodeFromString(json)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return emptyList()
+            }
+        }
         fun getQuestions(): List<Question> {
             return listOf(
                 Question(3, "Which of the below superstars had the most eliminations in the 1999 Royal Rumble match ?",

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -64,6 +65,11 @@ fun TimeTrialsSection(
     list: List<TimeTrial>,
     navigate: (id: Int) -> Unit
 ) {
+    val itemHeight = 80.dp
+    val spacing = 8.dp
+    val maxItems = 4
+    val maxHeight = (itemHeight * maxItems) + (spacing * (maxItems - 1))
+
     AnimatedVisibility(
         visible = true,
         enter = fadeIn(
@@ -74,7 +80,8 @@ fun TimeTrialsSection(
             maxWidth = 1f,
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .height(maxHeight).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 itemsIndexed(list) { index, it ->

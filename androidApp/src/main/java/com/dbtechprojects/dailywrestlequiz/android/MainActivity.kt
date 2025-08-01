@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,8 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialGameScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.ArgPersistenceImplementation
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.HomeViewModelFactory
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getHomeViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialGameViewModel
@@ -33,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MyApplicationTheme {
                 Surface(
@@ -65,7 +69,8 @@ fun AppNavHost(
                 },
                 onNavigateToVersus = {
                     // TODO: Add navigation route
-                }
+                },
+                viewModel = getHomeViewModel()
             )
         }
 

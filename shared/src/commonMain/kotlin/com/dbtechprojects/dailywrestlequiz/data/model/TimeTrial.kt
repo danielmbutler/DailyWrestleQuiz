@@ -5,7 +5,7 @@ data class TimeTrial (
     val id: Int,
     val highScore: String,
     val color: String,
-    val timeLimit: Int = 480 // 8 minutes
+    val timeLimit: Int = 480 //  480 8 minutes
 ){
 
     companion object{
@@ -138,6 +138,10 @@ data class TimeTrial (
             "Jerry Lynn" to listOf(),
             "Steve Corino" to listOf(),
             "Rhino" to listOf("Rhyno")
+        )
+
+        val test: Map<String, List<String>> = mapOf(
+            "Shane Douglas" to listOf(),
         )
 
     }

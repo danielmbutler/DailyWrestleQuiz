@@ -32,3 +32,25 @@ fun PrimaryButton(
         )
     }
 }
+
+@Composable
+fun SecondaryButton(
+    modifier: Modifier,
+    onClick: () -> Unit, text: String) {
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor =
+              MaterialTheme.colorScheme.secondary
+            ,
+            contentColor = MaterialTheme.colorScheme.onBackground
+        )
+    ) {
+        Text(
+            style = MaterialTheme.typography.bodyLarge,
+            text = text
+        )
+    }
+}

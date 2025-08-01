@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    id("org.jetbrains.kotlin.plugin.compose") version libs.versions.kotlin.get() // ✅ Add this
 }
 
 android {
@@ -30,12 +31,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+
+    kotlin {
+        jvmToolchain(17)
     }
+
 }
 
 dependencies {
@@ -47,7 +50,6 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.koin.android)
     debugImplementation(libs.compose.ui.tooling)
-
     // Spin Wheel
     implementation("com.github.commandiron:SpinWheelCompose:1.1.1")
 }

@@ -2,6 +2,7 @@ package com.dbtechprojects.dailywrestlequiz.android.ui.shared
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -60,6 +61,50 @@ fun QuestionTimer(
             color = MaterialTheme.colorScheme.onBackground
         )
 
+    }
+
+}
+
+@Composable
+fun QuestionTimerTypeTwo(
+    scoreText: String,
+    progress: Float,
+    timeRemainingText: String
+){
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth().padding(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            PrimaryBodyLarge(
+                text = scoreText,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            PrimaryBodyLarge(
+                text = timeRemainingText,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            LinearProgressIndicator(
+                progress = progress,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(2.dp)),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.background
+            )
+        }
     }
 
 }

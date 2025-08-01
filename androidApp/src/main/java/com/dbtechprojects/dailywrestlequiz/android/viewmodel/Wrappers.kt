@@ -1,3 +1,5 @@
+@file:Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING", "UNCHECKED_CAST")
+
 package com.dbtechprojects.dailywrestlequiz.android.viewmodel
 
 import androidx.compose.runtime.Composable
@@ -11,6 +13,8 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelImpl
@@ -112,6 +116,23 @@ class TimeTrialGameViewModelFactory(private val timeTrialId: ArgPersistence<Int>
 fun getTimeTrialGameViewModel(id: ArgPersistence<Int>): TimeTrialGameViewModel {
     return viewModel(factory =
         TimeTrialGameViewModelFactory(id)
+    )
+}
+
+class HomeViewModelWrapper(
+) : ViewModel(), HomeViewModel by
+HomeViewModelImpl(getKoin().get())
+
+class HomeViewModelFactory() : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return HomeViewModelWrapper() as T
+    }
+}
+
+@Composable
+fun getHomeViewModel(): HomeViewModel {
+    return viewModel(factory =
+        HomeViewModelFactory()
     )
 }
 

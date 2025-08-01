@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -108,8 +111,21 @@ fun ReusableRow(
 @Composable
 fun SurfaceSection(
     contentSpacedBy: Int = 0,
-    content: @Composable () -> Unit
+    isScrollable: Boolean = false,
+    content: @Composable () -> Unit,
 ) {
+    val coloumnModifer = Modifier
+        .fillMaxSize()
+        .clip(RoundedCornerShape(12.dp))
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(12.dp)
+
+    if (isScrollable) {
+        coloumnModifer
+            .verticalScroll(rememberScrollState())
+            .imePadding()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,11 +133,7 @@ fun SurfaceSection(
     )
     {
         Column(
-            Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(12.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(12.dp),
+            coloumnModifer,
             verticalArrangement = Arrangement.spacedBy(contentSpacedBy.dp),
         ) {
             content.invoke()

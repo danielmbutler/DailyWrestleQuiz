@@ -7,6 +7,7 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModel.Companion.ARG_TIME_TRIAL_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,9 @@ interface TimeTrialGameViewModel {
     fun sendAttempt(attempt: String)
     val  win: StateFlow<Boolean>
     val quizName: StateFlow<String>
+    val winTime: StateFlow<String>
+
+    fun reset()
 
     companion object {
         const val ARG_TIME_TRIAL_ID = "timeTrialId"
@@ -36,7 +40,7 @@ interface TimeTrialGameViewModel {
 class TimeTrialGameViewModelImpl(
     private val timeTrialUseCase: TimeTrialUseCase,
     private val timerUtils: TimerUtils,
-    timeTrialId: ArgPersistence<Int>,
+    private val timeTrialId: ArgPersistence<Int>,
 ) : BaseViewModel(), TimeTrialGameViewModel {
 
     private var timeTrialItemsSize = 0
@@ -68,25 +72,47 @@ class TimeTrialGameViewModelImpl(
     private val _quizName = MutableStateFlow("")
     override val quizName: StateFlow<String> get() = _quizName
 
+   private val _winTime = MutableStateFlow("")
+    override val winTime: StateFlow<String>
+        get() = _winTime
+
+    private lateinit var timerJob : Job
+
+    override fun reset() {
+        _gameOver.value = false
+        _win.value = false
+        _progress.value = 0f
+        _winTime.value = ""
+        elapsedTime = 0
+        score = 0
+        setup()
+    }
+
     private val _win = MutableStateFlow(false)
     override val win: StateFlow<Boolean> get() = _win
 
+    private var originalKeyOrder: List<String> = emptyList()
 
-    init {
+    private fun setup(){
         timeTrialId.get(ARG_TIME_TRIAL_ID)?.let { id ->
             timeTrialUseCase.getTimeTrial(id = id)?.let { timeTrial ->
                 timeTrialUseCase.getDetails(id).let { namesAndAliases ->
+                    originalKeyOrder = namesAndAliases.keys.toList() // Store original order
                     _foundItems.value = namesAndAliases.map { "******" }
                     originalGameData = namesAndAliases.toMutableMap()
                     timeTrialItemsSize = namesAndAliases.size
                     _quizName.value = timeTrial.name
                     _score.value = "0/$timeTrialItemsSize"
                 }
-                viewModelScope.launch {
-                    startTimer(timeTrial.timeLimit)
+                if (this::timerJob.isInitialized){
+                    timerJob.cancel()
                 }
+                timerJob = startTimer(timeTrial.timeLimit)
             }
         }
+    }
+    init {
+       setup()
         // OH DEAR
     }
 
@@ -95,10 +121,10 @@ class TimeTrialGameViewModelImpl(
         if (gameOver.value) return
         if (attempt.isBlank()) return
         if (originalGameData == null) return
+        val attempt = attempt.trim()
 
         // will be filled with correct key if match found
-        var answerKey: String = ""
-        var index = 0
+        var answerKey = ""
 
         originalGameData!!.forEach { (key, value) ->
             // check values for direct match (wrestler names)
@@ -109,10 +135,10 @@ class TimeTrialGameViewModelImpl(
                 answerKey = key
                 return@forEach
             }
-            index++
         }
 
         if (answerKey.isNotBlank()) {
+            val index = originalKeyOrder.indexOf(answerKey)
             updateForCorrectAnswer(answerKey, index)
         }
     }
@@ -139,14 +165,16 @@ class TimeTrialGameViewModelImpl(
     private fun endgame() {
         _gameOver.value = true
         _win.value = true
+        _winTime.value = timerUtils.formatTimeFromSeconds(elapsedTime)
         viewModelScope.launch(Dispatchers.IO) {
             timeTrialUseCase.saveTime(elapsedTime)
         }
+        timerJob.cancel()
     }
 
-    private suspend fun startTimer(
+    private fun startTimer(
         totalTime: Int,
-    ) {
+    ) : Job = viewModelScope.launch {
         for (elapsed in 0..totalTime) {
             elapsedTime = elapsed
             _progress.value = timerUtils.calculateLinearProgress(elapsed, totalTime)

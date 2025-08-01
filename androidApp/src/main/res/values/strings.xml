@@ -44,4 +44,7 @@
     <string name="congratulations">Congratulations!</string>
     <string name="better_luck_next_time">Better luck next time!</string>
     <string name="share_result">Share Result</string>
+    <string name="try_again">Try Again</string>
+    <string name="checklist">checklist</string>
+    <string name="entries">Entries</string>
 </resources>

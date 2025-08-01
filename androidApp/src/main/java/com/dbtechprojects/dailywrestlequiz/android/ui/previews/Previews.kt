@@ -12,6 +12,7 @@ import com.dbtechprojects.dailywrestlequiz.android.MyApplicationTheme
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelStub
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelStub
 
@@ -49,8 +50,11 @@ fun HomeScreenPreviewFs1() {
             color = MaterialTheme.colorScheme.background
         ) {
             HomeScreen(
-                onNavigateToDaily = {}, {}, {},
-                {}
+                onNavigateToDaily = {},
+                onNavigateToTrivia = {},
+                onNavigateToVersus = {},
+                onNavigateToTimeTrial = {},
+                viewModel = HomeViewModelStub()
             )
         }
     }
