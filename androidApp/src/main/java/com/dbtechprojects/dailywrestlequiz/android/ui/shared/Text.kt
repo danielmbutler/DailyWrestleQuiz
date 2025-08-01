@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -136,15 +137,15 @@ fun AutoResizedTextHeight(
 @Composable
 fun AutoResizedTextWidth(
     text: String,
-    style: androidx.compose.ui.text.TextStyle,
+    style: TextStyle,
     color: Color,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center
 ) {
-    var resizedTextStyle by remember {
+    var resizedTextStyle by remember(text) {
         mutableStateOf(style)
     }
-    var shouldDraw by remember {
+    var shouldDraw by remember(text) {
         mutableStateOf(false)
     }
 
@@ -163,14 +164,12 @@ fun AutoResizedTextWidth(
         softWrap = false,
         onTextLayout = { result: TextLayoutResult ->
             if (result.didOverflowWidth) {
-                if (style.fontSize.isUnspecified) {
-                    resizedTextStyle = resizedTextStyle.copy(
-                        fontSize = defaultFontSize
-                    )
+                val newSize = if (resizedTextStyle.fontSize.isUnspecified) {
+                    defaultFontSize
+                } else {
+                    resizedTextStyle.fontSize * 0.95
                 }
-                resizedTextStyle = resizedTextStyle.copy(
-                    fontSize = resizedTextStyle.fontSize * 0.95
-                )
+                resizedTextStyle = resizedTextStyle.copy(fontSize = newSize)
             } else {
                 shouldDraw = true
             }

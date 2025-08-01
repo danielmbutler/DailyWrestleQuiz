@@ -3,6 +3,8 @@ package com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.room.RoomRawQuery
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 
 @Dao
@@ -19,4 +21,21 @@ interface QuestionDao {
 
     @Query("UPDATE Question SET timesAnswered = timesAnswered + 1 WHERE question_id = :questionId")
     suspend fun updateTimesAnswered(questionId: Int)
+
+    @Query("""SELECT * FROM Question
+            WHERE timesAnswered = (SELECT MIN(timesAnswered) FROM Question)
+            ORDER BY RANDOM()
+            LIMIT 1;""")
+    suspend fun getRandomQuestionFromLeastAnswered(): Question
+
+    @Query("""SELECT * FROM Question
+            WHERE timesAnswered = 0
+            ORDER BY RANDOM()
+            LIMIT 1;""")
+    suspend fun getRandomQuestion(): Question?
+
+
+    @RawQuery
+    suspend fun getQuestionsRaw(query: RoomRawQuery): List<Question>
+
 }

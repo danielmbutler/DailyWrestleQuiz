@@ -76,13 +76,18 @@ fun AppNavHost(
 
         composable(NavRoutes.WHEEL_OF_TRIVIA) {
             WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = {
-                navController.navigate("${NavRoutes.QUESTION}/$it")
+                navController.navigate(
+                    "${NavRoutes.QUESTION}/$it?" +
+                            "${QuestionViewModel.ARG_QUESTION_COUNT}=1"
+                )
             })
         }
 
         composable(NavRoutes.QUIZ) {
             QuizScreen(getQuizViewModel(), navigateToQuestion = {
-                navController.navigate("${NavRoutes.QUESTION}/$it")
+                navController.navigate("" +
+                        "${NavRoutes.QUESTION}/$it?" +
+                        "${QuestionViewModel.ARG_QUESTION_COUNT}=0")
             })
         }
         composable(NavRoutes.TIME_TRIAL) {
@@ -90,19 +95,23 @@ fun AppNavHost(
                 getTimeTrialListViewModel(), navigateToTimeTrial =
                     {
                         navController.navigate("${NavRoutes.TIME_TRIAL_GAME}/$it")
-                    })
+                    }
+            )
         }
 
         composable(
-            route = "${NavRoutes.QUESTION}/{${QuestionViewModel.ARG_QUIZ_ID}}",
+            route = "${NavRoutes.QUESTION}/{${QuestionViewModel.ARG_QUIZ_ID}}?${QuestionViewModel.ARG_QUESTION_COUNT}={${QuestionViewModel.ARG_QUESTION_COUNT}}",
             arguments = listOf(
                 navArgument(QuestionViewModel.ARG_QUIZ_ID) {
+                    type = NavType.IntType
+                },
+                navArgument(QuestionViewModel.ARG_QUESTION_COUNT) {
                     type = NavType.IntType
                 }
             )
         ) { entry ->
 
-           val args = ArgPersistenceImplementation<Int>(savedStateHandle = entry.savedStateHandle )
+           val args = ArgPersistenceImplementation<Int?>(savedStateHandle = entry.savedStateHandle)
 
             QuestionScreen(getQuestionViewModel(args)) {
                 navController.navigate(NavRoutes.HOME) {

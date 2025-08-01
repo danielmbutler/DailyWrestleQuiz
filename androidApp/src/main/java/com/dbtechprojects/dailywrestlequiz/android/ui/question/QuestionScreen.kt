@@ -3,7 +3,10 @@ package com.dbtechprojects.dailywrestlequiz.android.ui.question
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,29 +24,40 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
+import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextHeight
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.AutoResizedTextWidth
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.FullScreenLoadingSpinner
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.GreenButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLargeAnimateSize
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.QuestionTimer
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SecondaryButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
 import com.dbtechprojects.dailywrestlequiz.android.ui.theme.CorrectGreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.theme.IncorrectRed
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -59,47 +72,198 @@ fun QuestionScreen(
     val questionsSize by viewModel.questionsAmount.collectAsState()
     val selectedAnswer by viewModel.selectedAnswer.collectAsState()
     val currentScore by viewModel.currentScore.collectAsState()
+    val isGameOver by viewModel.isGameOver.collectAsState()
+    val quizName by viewModel.quizName.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val customEndMessage by viewModel.customEndMessage.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        SurfaceSection {
-            QuestionScreenHeaderRow(
-                currentIndex,
-                questionsSize = questionsSize
-            )
-            QuestionTimer(
-                progress,
-                remainingText
-            )
-            QuestionBox(
-                question = currentQuestion?.question ?: ""
-            )
+        if (isLoading) {
+            FullScreenLoadingSpinner()
+            return@Box
+        }
 
-            AnswerSection(
-                answers = Question.getAnswers(currentQuestion?.answers ?: ""),
-                onClickListener = { answer ->
-                    viewModel.setAnswer(answer)
-                },
-                correctAnswer = currentQuestion?.answer ?: 0,
-                selectedAnswer = selectedAnswer
-            )
-
-            if (selectedAnswer != null) {
-                ResultStatement(
-                    isCorrect = selectedAnswer == currentQuestion?.answer,
-                    isOutOfTime = selectedAnswer == -1,
-                    currentScore = currentScore
+        AnimatedVisibility(
+            visible = isGameOver,
+            enter = fadeIn(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    delayMillis = 3500
                 )
-                NextButton { viewModel.requestNextQuestion() }
+            )
+
+        ) {
+            SurfaceSection {
+                EndScreen(
+                    quizName = quizName,
+                    score = currentScore,
+                    navHome,
+                    customEndMessage = customEndMessage
+                )
+            }
+
+        }
+
+        AnimatedVisibility(
+            visible = !isGameOver,
+            exit = fadeOut(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    delayMillis = 1000
+                )
+            )
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                SurfaceSection {
+                    GameScreen(
+                        viewModel,
+                        progress,
+                        remainingText,
+                        currentQuestion,
+                        currentIndex,
+                        questionsSize,
+                        selectedAnswer,
+                        currentScore
+                    )
+                }
+                CurrentScore(
+                    currentScore = currentScore,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(24.dp)
+                )
             }
         }
-        CurrentScore(
-            currentScore = currentScore,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp)
-        )
     }
 
+
+}
+
+@Composable
+fun GameScreen(
+    viewModel: QuestionViewModel,
+    progress: Float,
+    remainingText: String,
+    currentQuestion: Question?,
+    currentIndex: Int,
+    questionsSize: Int,
+    selectedAnswer: Int?,
+    currentScore: Int
+) {
+    QuestionScreenHeaderRow(
+        currentIndex,
+        questionsSize = questionsSize
+    )
+    QuestionTimer(
+        progress,
+        remainingText
+    )
+    QuestionBox(
+        question = currentQuestion?.question ?: ""
+    )
+
+    AnswerSection(
+        answers = Question.getAnswers(currentQuestion?.answers ?: ""),
+        onClickListener = { answer ->
+            viewModel.setAnswer(answer)
+        },
+        correctAnswer = currentQuestion?.answer ?: 0,
+        selectedAnswer = selectedAnswer
+    )
+
+    if (selectedAnswer != null) {
+        ResultStatement(
+            isCorrect = selectedAnswer == currentQuestion?.answer,
+            isOutOfTime = selectedAnswer == -1,
+            currentScore = currentScore,
+            isLast = currentIndex == questionsSize
+        )
+        if (currentIndex != questionsSize) {
+            NextButton { viewModel.requestNextQuestion() }
+        }
+    }
+}
+
+
+@Composable
+fun EndScreen(
+    quizName: String, score: Int,
+    onNavigateHome: () -> Unit,
+    customEndMessage: String?
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val shareOpened = remember { mutableStateOf(false) }
+    var text = stringResource(R.string.congratulations)
+
+    text += "\n You completed the $quizName quiz"
+
+    text += "\n Your score was ${score}!"
+
+    customEndMessage?.let {
+        text = customEndMessage
+    }
+
+    val shareText = if (customEndMessage != null) {
+        "My Streak is now {streak} On the Daily Wrestling Trivia App !"
+    } else {
+        "I completed the $quizName quiz and scored $score. On the Daily Wrestling Trivia App !"
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp), horizontalArrangement = Arrangement.Center
+    ) {
+        PrimaryBodyLarge(
+            text,
+            textAlign = TextAlign.Center
+        )
+    }
+    Row(modifier = Modifier.fillMaxSize()) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(32.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.belt),
+                contentDescription = "Trivia Championship",
+                modifier = Modifier.size(320.dp).padding(
+                    bottom = 24.dp)
+            )
+
+            PrimaryButton(
+                onClick = {
+                    if (!shareOpened.value) {
+                        shareOpened.value = true
+                        UiUtils.sendShareEvent(
+                            shareText,
+                            context,
+                        )
+                        // Reset after 2 seconds
+                        scope.launch {
+                            if (shareOpened.value) {
+                                delay(2000)
+                                shareOpened.value = false
+                            }
+                        }
+                    }
+                },
+                text = stringResource(R.string.share_result),
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
+            )
+
+            GreenButton(
+                onClick = {
+                    onNavigateHome.invoke()
+                },
+                text = stringResource(R.string.home),
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)
+            )
+        }
+
+    }
 }
 
 @Composable
@@ -182,7 +346,8 @@ fun AnswerSection(
 fun ResultStatement(
     isCorrect: Boolean,
     isOutOfTime: Boolean,
-    currentScore: Int
+    currentScore: Int,
+    isLast: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -198,14 +363,16 @@ fun ResultStatement(
                     stringResource(R.string.question_answer_incorrect)
                 }
             )
-            Row {
-                PrimaryBodyLarge(
-                    text = stringResource(R.string.current_score)
-                )
-                PrimaryBodyLargeAnimateSize(
-                    shouldAnimate = isCorrect,
-                    text = "$currentScore"
-                )
+            if (!isLast) {
+                Row {
+                    PrimaryBodyLarge(
+                        text = stringResource(R.string.current_score)
+                    )
+                    PrimaryBodyLargeAnimateSize(
+                        shouldAnimate = isCorrect,
+                        text = "$currentScore"
+                    )
+                }
             }
         }
 

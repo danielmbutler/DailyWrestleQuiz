@@ -44,7 +44,9 @@ object AppModule {
         single<HomeViewModel> { HomeViewModelImpl(get()) }
         single { TimerUtils() }
 
-        factory { (args: ArgPersistence<Int>) -> QuestionViewModelImpl(get(), get(), args, get()) }
+        factory { (args: ArgPersistence<Int?>)
+
+            -> QuestionViewModelImpl(get(), get(), args, get()) }
 
         single { QuizViewModelImpl(get()) }
 

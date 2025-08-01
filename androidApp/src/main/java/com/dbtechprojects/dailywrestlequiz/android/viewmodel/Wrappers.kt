@@ -29,27 +29,34 @@ import org.koin.mp.KoinPlatform.getKoin
 class QuestionViewModelWrapper(
     quizUseCase: QuizUseCase,
     questionsUseCase: QuestionsUseCase,
-    argPersistence: ArgPersistence<Int>,
+    args: ArgPersistence<Int?>,
     timerUtils: TimerUtils
 ) : ViewModel(), QuestionViewModel by QuestionViewModelImpl(
-    questionsUseCase, quizUseCase, argPersistence, timerUtils
+    questionsUseCase = questionsUseCase,
+    quizUseCase = quizUseCase,
+    args = args,
+    timerUtils = timerUtils,
 )
 
-class QuestionViewModelFactory(private val argPersistence: ArgPersistence<Int>) : ViewModelProvider.Factory {
+class QuestionViewModelFactory(
+    private val args: ArgPersistence<Int?>,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return QuestionViewModelWrapper(
             quizUseCase = getKoin().get(),
             questionsUseCase = getKoin().get(),
             timerUtils = getKoin().get(),
-            argPersistence = argPersistence
+            args = args,
         ) as T
     }
 }
 
 @Composable
-fun getQuestionViewModel(argPersistence: ArgPersistence<Int>): QuestionViewModel {
+fun getQuestionViewModel(
+    args: ArgPersistence<Int?>
+): QuestionViewModel {
     return viewModel(factory =
-        QuestionViewModelFactory(argPersistence)
+        QuestionViewModelFactory(args)
     )
 }
 

@@ -6,10 +6,10 @@ import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
-import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel.Companion.ARG_QUESTION_COUNT
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel.Companion.ARG_QUIZ_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -27,7 +27,15 @@ interface QuestionViewModel {
     val timeRemainingText: StateFlow<String>
     val progress: StateFlow<Float>
     val selectedAnswer: StateFlow<Int?>
-    val currentScore:  StateFlow<Int>
+    val currentScore: StateFlow<Int>
+
+    val quizName: StateFlow<String>
+
+    val isGameOver: StateFlow<Boolean>
+
+    val isLoading: StateFlow<Boolean>
+
+    val customEndMessage: StateFlow<String?>
 
     fun setAnswer(answer: Int)
 
@@ -35,16 +43,18 @@ interface QuestionViewModel {
 
     companion object {
         const val ARG_QUIZ_ID = "quizId"
+        const val ARG_QUESTION_COUNT = "questionCount"
     }
 }
 
 class QuestionViewModelImpl(
     private val questionsUseCase: QuestionsUseCase,
     private val quizUseCase: QuizUseCase,
-    private val quizId: ArgPersistence<Int>,
-    private val timerUtils: TimerUtils
+    private val args: ArgPersistence<Int?>,
+    private val timerUtils: TimerUtils,
 ) : BaseViewModel(), QuestionViewModel {
 
+    private var questionsList = emptyList<Question>()
 
     private val _state = MutableStateFlow<Question?>(null)
     override val state: StateFlow<Question?> = _state.asStateFlow()
@@ -69,20 +79,75 @@ class QuestionViewModelImpl(
     override val currentScore: StateFlow<Int>
         get() = _currentScore
 
+    private val _isGameOver = MutableStateFlow(false)
+    override val isGameOver: StateFlow<Boolean>
+        get() = _isGameOver
+
+    private val _isLoading = MutableStateFlow(false)
+    override val isLoading: StateFlow<Boolean>
+        get() = _isLoading
+
+
+    private val _quizName = MutableStateFlow("")
+    override val quizName: StateFlow<String>
+        get() = _quizName
+
+    private val _customEndMessage = MutableStateFlow<String?>(null)
+    override val customEndMessage: StateFlow<String?>
+        get() = _customEndMessage
+
     private val _elapsedTime = MutableStateFlow(0)
 
     private var answered = false
 
     private var quiz: Quiz? = null
 
+    private fun getQuestionsAmount(quiz: Quiz): Int {
+        args.get(ARG_QUESTION_COUNT).let {
+            return if (it == 0) {
+                quiz.questions
+            } else {
+                it ?: 1
+            }
+        }
+    }
+
+    private fun getQuizName(quiz: Quiz): String {
+        args.get(ARG_QUESTION_COUNT).let {
+            return if (it == 0) {
+                quiz.name
+            } else {
+                "Daily Wrestling Trivia"
+            }
+        }
+    }
+
+    private fun setCustomMessage() {
+        _customEndMessage.value =
+            if (args.get(ARG_QUESTION_COUNT) == 0) {
+                 null
+            } else {
+                var text = "Congratulations!"
+                text += "\n Your Streak is now 24!"
+                text
+            }
+
+    }
+
+
     init {
-        requestQuestion()
+        _isLoading.value = true
         viewModelScope.launch {
-            quizId.get(ARG_QUIZ_ID)?.let {
+            args.get(ARG_QUIZ_ID)?.let {
                 quizUseCase.getQuiz(it)?.let { quiz ->
-                    _questionsAmount.value = quiz.questions
+                    requestQuestions(quiz)
+                    _state.value = questionsList.firstOrNull()
+                    _questionsAmount.value = getQuestionsAmount(quiz)
+                    _quizName.value = getQuizName(quiz)
                     this@QuestionViewModelImpl.quiz = quiz
+                    _isLoading.value = false
                     startTimer(quiz.timeLimit)
+                    setCustomMessage()
                 }
             }
         }
@@ -99,6 +164,19 @@ class QuestionViewModelImpl(
                 }
             }
             _selectedAnswer.value = answer
+
+            if (_currentQuestionNumber.value == _questionsAmount.value) {
+                _isGameOver.value = true
+                saveScore()
+            }
+        }
+    }
+
+    private fun saveScore() {
+        viewModelScope.launch(Dispatchers.IO) {
+            quiz?.let {
+                questionsUseCase.saveScore(it.id, _currentScore.value)
+            }
         }
     }
 
@@ -127,7 +205,7 @@ class QuestionViewModelImpl(
     }
 
     override fun requestNextQuestion() {
-        requestQuestion()
+        _state.value = questionsList[currentQuestionNumber.value - 1]
         resetState()
     }
 
@@ -142,9 +220,14 @@ class QuestionViewModelImpl(
         }
     }
 
-    private fun requestQuestion() {
-        viewModelScope.launch {
-            _state.value = questionsUseCase.getRandomQuestion()
+    private suspend fun requestQuestions(quiz: Quiz) {
+        questionsList = quiz.let {
+            questionsUseCase.getQuestions(
+                it,
+                args.get(
+                    ARG_QUESTION_COUNT
+                )
+            )
         }
     }
 
@@ -170,9 +253,9 @@ class QuestionViewModelImpl(
         fun stub(): QuestionViewModel {
             return QuestionViewModelImpl(
                 questionsUseCase = QuestionUseCaseStub(),
-                quizId = StubArgPersistence<Int>(Quiz.getQuiz().first().id),
+                args = StubArgPersistence<Int>(null),
                 timerUtils = TimerUtils(),
-                quizUseCase = QuizUseCaseStub()
+                quizUseCase = QuizUseCaseStub(),
             )
         }
     }
