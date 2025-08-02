@@ -21,6 +21,11 @@ data class Quiz(
     }
     companion object {
 
+        const val DAILY_TRIVIA = 9999
+//        const val TIME_TRIALS = 2
+//        const val VERSUS = 3
+//        const val WHEEL_OF_TRIVIA = 4
+
         fun getQuiz(): List<Quiz> {
             return listOf(
                 Quiz(1, "ATTITUDE ERA", 20, 20, "#B22222", "WWE", "90s", "", 1, 1),       // Deep red (fire brick)

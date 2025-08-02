@@ -128,7 +128,7 @@ fun getTimeTrialGameViewModel(id: ArgPersistence<Int>): TimeTrialGameViewModel {
 
 class HomeViewModelWrapper(
 ) : ViewModel(), HomeViewModel by
-HomeViewModelImpl(getKoin().get())
+HomeViewModelImpl(getKoin().get(), getKoin().get())
 
 class HomeViewModelFactory() : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

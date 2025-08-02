@@ -28,7 +28,7 @@ import javax.crypto.spec.SecretKeySpec
             val ivSpec = IvParameterSpec(ivBytes)
 
             // 5. Decode Base64 and decrypt
-            val cipherBytes = android.util.Base64.decode(encryptedBase64, android.util.Base64.DEFAULT)
+            val cipherBytes = Base64.decode(encryptedBase64, Base64.DEFAULT)
             val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec)
             val plainBytes = cipher.doFinal(cipherBytes)

@@ -3,13 +3,14 @@ package com.dbtechprojects.dailywrestlequiz.data.di
 import androidx.room.RoomDatabase
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.AppDatabase
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.getRoomDatabase
-import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
-import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCaseImpl
+import com.dbtechprojects.dailywrestlequiz.data.usecase.SettingsUseCase
+import com.dbtechprojects.dailywrestlequiz.data.usecase.SettingsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.SyncManager
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCaseImpl
@@ -34,15 +35,18 @@ object AppModule {
         }
 
         // Provide the DAO from database
-        single<QuestionDao> { get<AppDatabase>().getDao() }
+        single<QuestionDao> { get<AppDatabase>().getQuestionDao() }
+        single<SettingsDao> { get<AppDatabase>().getSettingsDao() }
     }
     val appModule = module {
         single { SyncManager(get()) }  // Koin injects QuestionDao automatically here
         single<QuestionsUseCase> { QuestionsUseCaseImpl(get()) }
         single<TimeTrialUseCase> { TimeTrialUseCaseImpl() }
+        single<SettingsUseCase>{ SettingsUseCaseImpl(get()) }
         single<QuizUseCase> { QuizUseCaseImpl() }
-        single<HomeViewModel> { HomeViewModelImpl(get()) }
+        single<HomeViewModel> { HomeViewModelImpl(get(), get()) }
         single { TimerUtils() }
+        single {  }
 
         factory { (args: ArgPersistence<Int?>)
 

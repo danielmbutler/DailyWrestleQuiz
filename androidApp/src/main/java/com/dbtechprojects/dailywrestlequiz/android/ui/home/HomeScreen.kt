@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,6 +34,7 @@ fun HomeScreen(
     onNavigateToTimeTrial: () -> Unit,
     onNavigateToVersus: () -> Unit,
 ) {
+    val streak by viewModel.streak.collectAsState()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -42,7 +45,7 @@ fun HomeScreen(
         HomeCallToAction {
             onNavigateToDaily.invoke()
         }
-        StreakSection()
+        StreakSection(streak)
         Options(
             onNavigateToTrivia,
             onNavigateToTimeTrial,
@@ -84,7 +87,7 @@ fun HomeCallToAction(onClick: () -> Unit) {
 }
 
 @Composable
-fun StreakSection() {
+fun StreakSection(streak: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,7 +100,7 @@ fun StreakSection() {
                 contentDescription = stringResource(R.string.current_streak),
             )
             Text(
-                text = stringResource(R.string.home_streak_text, 5),
+                text = stringResource(R.string.home_streak_text, streak),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )

@@ -224,13 +224,18 @@ fun EndScreen(
     Row(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(32.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.belt),
                 contentDescription = "Trivia Championship",
-                modifier = Modifier.size(320.dp).padding(
-                    bottom = 24.dp)
+                modifier = Modifier
+                    .size(320.dp)
+                    .padding(
+                        bottom = 24.dp
+                    )
             )
 
             PrimaryButton(
@@ -311,22 +316,22 @@ fun AnswerSection(
             val isCorrect = index == correctAnswer
             val isSelected = index == selectedAnswer
             val answered = selectedAnswer != null
-
             val backgroundColor by animateColorAsState(
                 targetValue = when {
-                    selectedAnswer == null -> MaterialTheme.colorScheme.background
                     isCorrect -> CorrectGreen// Green
                     isSelected -> IncorrectRed// Red
                     else -> MaterialTheme.colorScheme.background
                 },
                 animationSpec = tween(durationMillis = 500)
             )
+
             if (answered && !isCorrect && !isSelected) {
                 return@itemsIndexed
             }
             ReusableRow(
                 onClick = { if (selectedAnswer == null) onClickListener(index) },
-                color = backgroundColor
+                color = if (selectedAnswer == null) MaterialTheme.colorScheme.background
+                else backgroundColor
             ) {
                 AutoResizedTextWidth(
                     text = answer,

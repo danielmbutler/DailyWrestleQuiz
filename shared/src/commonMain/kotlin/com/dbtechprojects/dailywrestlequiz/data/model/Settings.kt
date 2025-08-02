@@ -4,11 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Score (
+data class Settings(
     @PrimaryKey(autoGenerate = true)
-    val id: String,
-    val quizId: String,
-    val score: Int,
-    val username: String?,
-    val sent: Boolean = false,
+    val id: Int,
+    val streak: Int,
+    val streakStartDate: String,
+    val currentStreakLastAnsweredDate: String
 )

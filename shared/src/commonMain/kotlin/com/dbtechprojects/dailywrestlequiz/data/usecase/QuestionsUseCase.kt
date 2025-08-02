@@ -63,6 +63,11 @@ class QuestionsUseCaseImpl(private val questionDao: QuestionDao) : QuestionsUseC
 
     override suspend fun saveScore(quizId: Int, score: Int) {
         // if score higher than previous score save
+        if (quizId == Quiz.DAILY_TRIVIA){
+            // update streak
+            return
+        }
+        // handle normal quiz scores
     }
 }
 
