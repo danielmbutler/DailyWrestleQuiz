@@ -3,7 +3,6 @@ package com.dbtechprojects.dailywrestlequiz.android.ui.question
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
@@ -50,7 +49,6 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLargeAni
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.QuestionTimer
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SecondaryButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
 import com.dbtechprojects.dailywrestlequiz.android.ui.theme.CorrectGreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.theme.IncorrectRed
@@ -76,6 +74,7 @@ fun QuestionScreen(
     val quizName by viewModel.quizName.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val customEndMessage by viewModel.customEndMessage.collectAsState()
+    val streak by viewModel.streak.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (isLoading) {
@@ -97,7 +96,8 @@ fun QuestionScreen(
                 EndScreen(
                     quizName = quizName,
                     score = currentScore,
-                    navHome,
+                    streak = streak,
+                    onNavigateHome = navHome,
                     customEndMessage = customEndMessage
                 )
             }
@@ -189,7 +189,8 @@ fun GameScreen(
 fun EndScreen(
     quizName: String, score: Int,
     onNavigateHome: () -> Unit,
-    customEndMessage: String?
+    customEndMessage: String?,
+    streak: Int
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -206,7 +207,7 @@ fun EndScreen(
     }
 
     val shareText = if (customEndMessage != null) {
-        "My Streak is now {streak} On the Daily Wrestling Trivia App !"
+        "My Streak is now $streak On the Daily Wrestling Trivia App !"
     } else {
         "I completed the $quizName quiz and scored $score. On the Daily Wrestling Trivia App !"
     }

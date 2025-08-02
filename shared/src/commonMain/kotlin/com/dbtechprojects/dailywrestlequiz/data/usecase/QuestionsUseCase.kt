@@ -2,8 +2,10 @@ package com.dbtechprojects.dailywrestlequiz.data.usecase
 
 import androidx.room.RoomRawQuery
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
+import kotlinx.coroutines.flow.firstOrNull
 
 interface QuestionsUseCase {
     suspend fun getQuestions(quiz: Quiz, questionCount: Int?): List<Question>
@@ -12,9 +14,14 @@ interface QuestionsUseCase {
     suspend fun updateTimesAnswered(questionId: Int)
 
     suspend fun saveScore(quizId: Int, score: Int)
+
+    suspend fun getStreak(): Int
 }
 
-class QuestionsUseCaseImpl(private val questionDao: QuestionDao) : QuestionsUseCase {
+class QuestionsUseCaseImpl(
+    private val questionDao: QuestionDao,
+    private val settingsDao: SettingsDao
+) : QuestionsUseCase {
 
     override suspend fun getQuestions(quiz: Quiz, questionCount: Int?): List<Question> {
         val query = StringBuilder("SELECT * FROM Question WHERE 1=1 ")
@@ -65,9 +72,30 @@ class QuestionsUseCaseImpl(private val questionDao: QuestionDao) : QuestionsUseC
         // if score higher than previous score save
         if (quizId == Quiz.DAILY_TRIVIA){
             // update streak
+           updateDailyTriviaStreak(score)
             return
         }
         // handle normal quiz scores
+
+    }
+
+    override suspend fun getStreak(): Int {
+        return settingsDao.getSettingsFlow().firstOrNull()?.streak ?: 0
+    }
+
+    private suspend fun updateDailyTriviaStreak(score: Int){
+        if (score > 1){
+            settingsDao.getSettingsFlow().firstOrNull {
+                if (it?.streak == 0){
+                    settingsDao.setStreakStartDate()
+                }
+                settingsDao.increaseStreak()
+                true
+            }
+        } else {
+            settingsDao.endStreak()
+            true
+        }
     }
 }
 
@@ -86,5 +114,9 @@ class QuestionUseCaseStub : QuestionsUseCase {
 
     override suspend fun saveScore(quizId: Int, score: Int) {
 
+    }
+
+    override suspend fun getStreak(): Int {
+        return 0
     }
 }

@@ -10,4 +10,8 @@ data class Settings(
     val streak: Int,
     val streakStartDate: String,
     val currentStreakLastAnsweredDate: String
-)
+){
+    companion object{
+        val initial = Settings(1, 0, "", "")
+    }
+}

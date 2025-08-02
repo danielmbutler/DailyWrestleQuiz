@@ -39,8 +39,8 @@ object AppModule {
         single<SettingsDao> { get<AppDatabase>().getSettingsDao() }
     }
     val appModule = module {
-        single { SyncManager(get()) }  // Koin injects QuestionDao automatically here
-        single<QuestionsUseCase> { QuestionsUseCaseImpl(get()) }
+        single { SyncManager(get(), get()) }  // Koin injects QuestionDao automatically here
+        single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get()) }
         single<TimeTrialUseCase> { TimeTrialUseCaseImpl() }
         single<SettingsUseCase>{ SettingsUseCaseImpl(get()) }
         single<QuizUseCase> { QuizUseCaseImpl() }

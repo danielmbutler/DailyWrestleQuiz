@@ -37,6 +37,8 @@ interface QuestionViewModel {
 
     val customEndMessage: StateFlow<String?>
 
+    val streak: StateFlow<Int>
+
     fun setAnswer(answer: Int)
 
     fun requestNextQuestion()
@@ -102,6 +104,10 @@ class QuestionViewModelImpl(
 
     private var quiz: Quiz? = null
 
+    private val _streak = MutableStateFlow(0)
+    override val streak: StateFlow<Int> get() = _streak
+
+
     private fun getQuestionsAmount(quiz: Quiz): Int {
         args.get(ARG_QUESTION_COUNT).let {
             return if (it == 0) {
@@ -122,13 +128,13 @@ class QuestionViewModelImpl(
         }
     }
 
-    private fun setCustomMessage() {
+    private suspend fun setCustomMessage() {
         _customEndMessage.value =
             if (args.get(ARG_QUESTION_COUNT) == 0) {
-                 null
+                null
             } else {
                 var text = "Congratulations!"
-                text += "\n Your Streak is now 24!"
+                text += "\n Your Streak is now ${questionsUseCase.getStreak()}!"
                 text
             }
 
@@ -147,7 +153,6 @@ class QuestionViewModelImpl(
                     this@QuestionViewModelImpl.quiz = quiz
                     _isLoading.value = false
                     startTimer(quiz.timeLimit)
-                    setCustomMessage()
                 }
             }
         }
@@ -166,17 +171,24 @@ class QuestionViewModelImpl(
             _selectedAnswer.value = answer
 
             if (_currentQuestionNumber.value == _questionsAmount.value) {
-                _isGameOver.value = true
-                saveScore()
+                viewModelScope.launch {
+                    saveScore()
+                    setCustomMessage()
+                    _streak.value = questionsUseCase.getStreak()
+                    _isGameOver.value = true
+
+                }
             }
         }
     }
 
-    private fun saveScore() {
-        viewModelScope.launch(Dispatchers.IO) {
-            quiz?.let {
-                questionsUseCase.saveScore(it.id, _currentScore.value)
+    private suspend fun saveScore() {
+        quiz?.let {
+            var quizId = it.id
+            if (args.get(ARG_QUESTION_COUNT) == 1) {
+                quizId = Quiz.DAILY_TRIVIA
             }
+            questionsUseCase.saveScore(quizId, _currentScore.value)
         }
     }
 

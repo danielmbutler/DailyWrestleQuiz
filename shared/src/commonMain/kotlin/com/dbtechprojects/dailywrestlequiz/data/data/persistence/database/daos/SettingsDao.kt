@@ -16,9 +16,15 @@ interface SettingsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveSettings(settings: Settings)
 
-    @Query("UPDATE Settings SET streak = streak + 1 WHERE id = 1")
+    @Query("UPDATE Settings SET streak = streak + 1, currentStreakLastAnsweredDate = datetime('now', 'localtime')  WHERE id = 1")
     suspend fun increaseStreak()
 
-    @Query("UPDATE Settings SET streak = 0 WHERE id = 1")
+    @Query("UPDATE Settings SET streakStartDate = datetime('now', 'localtime') WHERE id = 1")
+    suspend fun setStreakStartDate()
+
+    @Query("UPDATE Settings SET " +
+            "streak = 0 ," +
+            "currentStreakLastAnsweredDate ='', streakStartDate = ''"+
+            "WHERE id = 1")
     suspend fun endStreak()
 }

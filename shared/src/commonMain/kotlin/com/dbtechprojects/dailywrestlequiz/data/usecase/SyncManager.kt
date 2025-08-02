@@ -1,17 +1,36 @@
 package com.dbtechprojects.dailywrestlequiz.data.usecase
 
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.file.decryptFileToJson
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
+import com.dbtechprojects.dailywrestlequiz.data.model.Settings
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.take
 
 class SyncManager(
-    private val questionDao: QuestionDao
+    private val questionDao: QuestionDao,
+    private val settingsDao: SettingsDao
 ) {
     private val key = "kjasdhfjshfkjsdhfksdjhfksdjfhsdk" // get from firebase
 
 
     suspend fun runSync(){
         // decrypt file
+        syncLocalQuestions()
+        setupAppSettings()
+    }
+
+    private suspend fun setupAppSettings(){
+        settingsDao.getSettingsFlow().firstOrNull{ settings ->
+            if (settings == null){
+                settingsDao.saveSettings(Settings.initial)
+            }
+            true
+        }
+    }
+
+    private suspend fun syncLocalQuestions(){
         questionDao.count().let {
             if (it > 50){
                 println("sync not needed count is $it")
