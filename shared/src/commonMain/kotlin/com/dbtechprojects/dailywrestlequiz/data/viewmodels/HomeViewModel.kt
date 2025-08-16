@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.time.measureTime
@@ -15,17 +16,27 @@ import kotlin.time.measureTime
 
 interface HomeViewModel {
     val streak: StateFlow<Int>
+    val canAccessStreakMode: StateFlow<Boolean>
 }
 
-class HomeViewModelImpl(syncManager: SyncManager, settingsUseCase: SettingsUseCase) :
+class HomeViewModelImpl(
+    syncManager: SyncManager,
+    settingsUseCase: SettingsUseCase
+) :
     BaseViewModel(), HomeViewModel {
     private val _streak = MutableStateFlow(0)
     override val streak get() = _streak
 
+    private val _canAccessStreakMode = MutableStateFlow(false)
+    override val canAccessStreakMode get() = _canAccessStreakMode
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsUseCase.getStreak().collect {
-                _streak.value = it
+            settingsUseCase.getSettings().collect {
+                if (it != null) {
+                    _streak.value = it.streak
+                    _canAccessStreakMode.value = settingsUseCase.canAccessStreakMode(it.currentStreakLastAnsweredDate)
+                }
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
@@ -43,4 +54,7 @@ class HomeViewModelStub() : HomeViewModel {
         get() {
             return MutableStateFlow(1)
         }
+    override val canAccessStreakMode: StateFlow<Boolean>
+        get() = MutableStateFlow(false)
+
 }

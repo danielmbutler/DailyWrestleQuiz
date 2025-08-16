@@ -132,9 +132,13 @@ class QuestionViewModelImpl(
         _customEndMessage.value =
             if (args.get(ARG_QUESTION_COUNT) == 0) {
                 null
+            } else if (_streak.value == 0) {
+                var text = "Unlucky!"
+                text += "\n You lost your streak !"
+                text
             } else {
                 var text = "Congratulations!"
-                text += "\n Your Streak is now ${questionsUseCase.getStreak()}!"
+                text += "\n Your Streak is now ${questionsUseCase.getStreak()} Days !"
                 text
             }
 
@@ -173,10 +177,9 @@ class QuestionViewModelImpl(
             if (_currentQuestionNumber.value == _questionsAmount.value) {
                 viewModelScope.launch {
                     saveScore()
-                    setCustomMessage()
                     _streak.value = questionsUseCase.getStreak()
+                    setCustomMessage()
                     _isGameOver.value = true
-
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.dbtechprojects.dailywrestlequiz.data.usecase
 
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.DateTimeFormat
+
 class TimerUtils {
 
     fun getTimeRemainingText(timeElapsed: Int, totalTime: Int): String {
@@ -22,6 +25,15 @@ class TimerUtils {
                 val secondStr = if (remainingSeconds == 1) "second" else "seconds"
                 "$minutes $minuteStr and $remainingSeconds $secondStr"
             }
+        }
+    }
+
+    fun getLocalDateTimeFromString(dateString: String): LocalDateTime? {
+        return try {
+            LocalDateTime.parse(dateString.replace(" ", "T"))
+        }catch (e: Exception){
+            e.printStackTrace()
+            null
         }
     }
 

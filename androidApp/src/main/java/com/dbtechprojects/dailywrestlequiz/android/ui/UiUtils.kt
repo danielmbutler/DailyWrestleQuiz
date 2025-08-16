@@ -3,7 +3,6 @@ package com.dbtechprojects.dailywrestlequiz.android.ui
 import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.Color
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.toColorInt
 
 object UiUtils {

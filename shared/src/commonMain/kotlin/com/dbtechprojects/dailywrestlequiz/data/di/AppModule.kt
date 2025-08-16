@@ -3,6 +3,7 @@ package com.dbtechprojects.dailywrestlequiz.data.di
 import androidx.room.RoomDatabase
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.AppDatabase
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.ScoreDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.getRoomDatabase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
@@ -36,14 +37,15 @@ object AppModule {
 
         // Provide the DAO from database
         single<QuestionDao> { get<AppDatabase>().getQuestionDao() }
+        single<ScoreDao> { get<AppDatabase>().getScoreDao() }
         single<SettingsDao> { get<AppDatabase>().getSettingsDao() }
     }
     val appModule = module {
         single { SyncManager(get(), get()) }  // Koin injects QuestionDao automatically here
-        single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get()) }
+        single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get(), get()) }
         single<TimeTrialUseCase> { TimeTrialUseCaseImpl() }
-        single<SettingsUseCase>{ SettingsUseCaseImpl(get()) }
-        single<QuizUseCase> { QuizUseCaseImpl() }
+        single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get()) }
+        single<QuizUseCase> { QuizUseCaseImpl(get()) }
         single<HomeViewModel> { HomeViewModelImpl(get(), get()) }
         single { TimerUtils() }
         single {  }

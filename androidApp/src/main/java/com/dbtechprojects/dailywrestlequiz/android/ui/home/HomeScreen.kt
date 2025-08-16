@@ -1,19 +1,29 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -24,8 +34,10 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.RoundedSmallDialog
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
@@ -35,6 +47,9 @@ fun HomeScreen(
     onNavigateToVersus: () -> Unit,
 ) {
     val streak by viewModel.streak.collectAsState()
+    val canAccessStreakMode by viewModel.canAccessStreakMode.collectAsState()
+    val showDialog = remember { mutableStateOf(false) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -42,8 +57,19 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AppTitle()
+        if (showDialog.value){
+            RoundedSmallDialog(
+                closeDialog = {showDialog.value = false},
+                action = {showDialog.value = false},
+                title = stringResource(R.string.you_already_played_today)
+            )
+        }
         HomeCallToAction {
-            onNavigateToDaily.invoke()
+            if (canAccessStreakMode) {
+                onNavigateToDaily.invoke()
+            } else {
+                showDialog.value = true
+            }
         }
         StreakSection(streak)
         Options(
@@ -53,6 +79,8 @@ fun HomeScreen(
         )
     }
 }
+
+
 
 @Composable
 fun AppTitle() {

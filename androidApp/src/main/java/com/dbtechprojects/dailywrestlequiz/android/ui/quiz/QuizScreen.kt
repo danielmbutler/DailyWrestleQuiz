@@ -24,6 +24,7 @@ import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.FullScreenLoadingSpinner
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ScreenCenterTitle
@@ -88,14 +89,20 @@ fun QuizSection(
                             onNavigateToQuestion(it.id)
                         }
                     ) {
-                        PrimaryBodyLarge(
-                            it.name,
-                            modifier= Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            textAlign = TextAlign.Center,
-                            color = androidx.compose.ui.graphics.Color.White
-                        )
+                        // add high score
+                        Column {
+                            PrimaryBodyLarge(
+                                it.name,
+                                modifier= Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                textAlign = TextAlign.Center,
+                                color = androidx.compose.ui.graphics.Color.White
+                            )
+
+                            PrimaryBodySmall(stringResource(R.string.high_score) + ": " + it.highestScore)
+                        }
+
                     }
                     if (index != quizzes.lastIndex) {
                         Spacer(modifier = Modifier.size(16.dp))

@@ -24,7 +24,7 @@ interface SettingsDao {
 
     @Query("UPDATE Settings SET " +
             "streak = 0 ," +
-            "currentStreakLastAnsweredDate ='', streakStartDate = ''"+
+            " currentStreakLastAnsweredDate = datetime('now', 'localtime'), streakStartDate = ''"+
             "WHERE id = 1")
     suspend fun endStreak()
 }

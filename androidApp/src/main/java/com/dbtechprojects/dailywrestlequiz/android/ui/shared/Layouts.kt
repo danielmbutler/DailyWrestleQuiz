@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +35,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.dbtechprojects.dailywrestlequiz.android.R
 
 
 @Composable
@@ -140,4 +146,33 @@ fun SurfaceSection(
         }
     }
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RoundedSmallDialog(
+    closeDialog: () -> Unit,
+    action: () -> Unit,
+    title: String,
+    buttonLabel: String = stringResource(R.string.close),
+) {
+    AlertDialog(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface),
+        onDismissRequest = { closeDialog.invoke()}) {
+        Column(modifier = Modifier
+            .padding(12.dp)) {
+            Text(title)
+            Spacer(modifier = Modifier.size(24.dp))
+            PrimaryButton(
+                text = buttonLabel,
+                enabled = true,
+                onClick = {
+                    action.invoke()
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+    }
 }

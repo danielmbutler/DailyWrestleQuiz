@@ -3,6 +3,8 @@ package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCaseStub
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +32,7 @@ class QuizViewModelImpl(
 
     init {
         _isLoading.value = true
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             delay(1000)
             _quizzes.value = quizUseCase.getQuizzes()
             _isLoading.value = false
@@ -50,8 +52,9 @@ class QuizViewModelStub : QuizViewModel {
 
 
     init {
-        _isLoading.value = true
-        _quizzes.value = QuizUseCaseStub().getQuizzes()
-        _isLoading.value = false
+//        vie
+//        _isLoading.value = true
+//        _quizzes.value = QuizUseCaseStub().getQuizzes()
+//        _isLoading.value = false
     }
 }

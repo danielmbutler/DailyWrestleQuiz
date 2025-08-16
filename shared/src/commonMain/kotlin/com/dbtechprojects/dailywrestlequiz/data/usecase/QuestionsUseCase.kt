@@ -2,9 +2,11 @@ package com.dbtechprojects.dailywrestlequiz.data.usecase
 
 import androidx.room.RoomRawQuery
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.ScoreDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
+import com.dbtechprojects.dailywrestlequiz.data.model.Score
 import kotlinx.coroutines.flow.firstOrNull
 
 interface QuestionsUseCase {
@@ -20,6 +22,7 @@ interface QuestionsUseCase {
 
 class QuestionsUseCaseImpl(
     private val questionDao: QuestionDao,
+    private val scoreDao: ScoreDao,
     private val settingsDao: SettingsDao
 ) : QuestionsUseCase {
 
@@ -76,6 +79,18 @@ class QuestionsUseCaseImpl(
             return
         }
         // handle normal quiz scores
+        // get previous score
+        // if higher update
+        // else do nothing
+        scoreDao.getScore(quizId)?.let {
+            if (score > it.score){
+                scoreDao.updateScore(it.copy(score = score))
+                return
+            }
+        }
+
+        // no score
+        scoreDao.insertScore(Score("", quizId.toString(), score, null))
 
     }
 

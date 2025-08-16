@@ -207,7 +207,10 @@ fun EndScreen(
     }
 
     val shareText = if (customEndMessage != null) {
-        "My Streak is now $streak On the Daily Wrestling Trivia App !"
+        if (streak == 0) {
+            "I lost my Streak on the Daily Wrestling Trivia App !"
+        } else
+            "My Streak is now $streak On the Daily Wrestling Trivia App !"
     } else {
         "I completed the $quizName quiz and scored $score. On the Daily Wrestling Trivia App !"
     }
@@ -229,15 +232,17 @@ fun EndScreen(
                 .fillMaxSize()
                 .padding(32.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.belt),
-                contentDescription = "Trivia Championship",
-                modifier = Modifier
-                    .size(320.dp)
-                    .padding(
-                        bottom = 24.dp
-                    )
-            )
+            if (streak != 0) {
+                Image(
+                    painter = painterResource(id = R.drawable.belt),
+                    contentDescription = "Trivia Championship",
+                    modifier = Modifier
+                        .size(320.dp)
+                        .padding(
+                            bottom = 24.dp
+                        )
+                )
+            }
 
             PrimaryButton(
                 onClick = {
