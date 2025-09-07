@@ -13,6 +13,7 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
+import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCase
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
@@ -23,6 +24,8 @@ import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewMode
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModelImpl
 import org.koin.mp.KoinPlatform.getKoin
 
 
@@ -140,6 +143,26 @@ class HomeViewModelFactory() : ViewModelProvider.Factory {
 fun getHomeViewModel(): HomeViewModel {
     return viewModel(factory =
         HomeViewModelFactory()
+    )
+}
+
+
+class VersusViewModelWrapper(
+    versusUseCase: VersusModeUseCase
+) : ViewModel(), VersusViewModel by VersusViewModelImpl(versusUseCase)
+
+class VersusViewModelFactory() : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return VersusViewModelWrapper(
+            getKoin().get(),
+        ) as T
+    }
+}
+
+@Composable
+fun getVersusViewModel(): VersusViewModel {
+    return viewModel(factory =
+        VersusViewModelFactory()
     )
 }
 

@@ -1,19 +1,24 @@
 package com.dbtechprojects.dailywrestlequiz.data.usecase
 
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.ScoreDao
+import com.dbtechprojects.dailywrestlequiz.data.model.Score
 import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
 
 interface TimeTrialUseCase {
-    fun getTimeTrials(): List<TimeTrial>
+    suspend fun getTimeTrials(): List<TimeTrial>
 
     fun getTimeTrial(id: Int): TimeTrial?
     fun getDetails(timeTrialId: Int): Map<String, List<String>>
 
-    fun saveTime(score: Int)
+    suspend fun saveTime(score: Int, timeTrialId: Int)
 }
 
-class TimeTrialUseCaseImpl : TimeTrialUseCase {
+class TimeTrialUseCaseImpl(
+    private val timerUtils: TimerUtils,
+    private val scoreDao: ScoreDao
+) : TimeTrialUseCase {
 
-    private val timeTrials =  listOf(
+    private val timeTrials = listOf(
         TimeTrial(
             id = 1,
             name = "WWE Champions",
@@ -46,16 +51,21 @@ class TimeTrialUseCaseImpl : TimeTrialUseCase {
 //        )
     )
 
-    override fun getTimeTrials(): List<TimeTrial> {
-        return timeTrials
+    override suspend fun getTimeTrials(): List<TimeTrial> {
+        return timeTrials.map {
+            val score = scoreDao.getTimeTrialScore(it.id)?.score ?: 0
+            if(score > 0) {
+                it.copy(highScore = timerUtils.getMinutesAndSecondsFromSeconds(score))
+            } else it
+        }
     }
 
     override fun getTimeTrial(id: Int): TimeTrial? {
-        return  timeTrials.find { it.id == id }
+        return timeTrials.find { it.id == id }
     }
 
     override fun getDetails(timeTrialId: Int): Map<String, List<String>> {
-        return when(timeTrialId){
+        return when (timeTrialId) {
             1 -> TimeTrial.wweChampions
             2 -> TimeTrial.wcwChampions
             3 -> TimeTrial.ecwChampions
@@ -64,11 +74,44 @@ class TimeTrialUseCaseImpl : TimeTrialUseCase {
         }
     }
 
-    override fun saveTime(score: Int) {
+    override suspend fun saveTime(score: Int, timeTrialId:Int) {
+        // get previous score
+        // if lower update
+        // else do nothing
+        scoreDao.getTimeTrialScore(timeTrialId)?.let {
+            if (score < it.score) {
+                scoreDao.updateScore(it.copy(score = score))
+                return
+            }
+        }
 
+        // no score
+        scoreDao.insertScore(
+            Score(
+                quizId = timeTrialId.toString(),
+                score = score, username = null
+            )
+        )
     }
 
 
 }
 
-class TimeTrialUseCaseStub : TimeTrialUseCase by TimeTrialUseCaseImpl()
+class TimeTrialUseCaseStub : TimeTrialUseCase {
+    override suspend fun getTimeTrials(): List<TimeTrial> {
+        return listOf()
+    }
+
+    override fun getTimeTrial(id: Int): TimeTrial? {
+        return null
+    }
+
+    override fun getDetails(timeTrialId: Int): Map<String, List<String>> {
+        return emptyMap()
+    }
+
+    override suspend fun saveTime(score: Int, timeTrialId: Int) {
+
+    }
+
+}

@@ -2,8 +2,11 @@ package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
 import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 
 interface TimeTrialListViewModel{
@@ -23,7 +26,9 @@ class TimeTrialListViewModelImpl (
 
 
     init {
-        _timeTrials.value = timeTrialUseCase.getTimeTrials()
+        viewModelScope.launch(Dispatchers.IO) {
+            _timeTrials.value = timeTrialUseCase.getTimeTrials()
+        }
     }
 
 }

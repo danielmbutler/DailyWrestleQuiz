@@ -55,7 +55,7 @@ class QuestionsUseCaseImpl(
 
         return try {
             questionDao.getQuestionsRaw(RoomRawQuery(query.toString()))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
         }
@@ -73,9 +73,9 @@ class QuestionsUseCaseImpl(
 
     override suspend fun saveScore(quizId: Int, score: Int) {
         // if score higher than previous score save
-        if (quizId == Quiz.DAILY_TRIVIA){
+        if (quizId == Quiz.DAILY_TRIVIA) {
             // update streak
-           updateDailyTriviaStreak(score)
+            updateDailyTriviaStreak(score)
             return
         }
         // handle normal quiz scores
@@ -83,14 +83,19 @@ class QuestionsUseCaseImpl(
         // if higher update
         // else do nothing
         scoreDao.getScore(quizId)?.let {
-            if (score > it.score){
+            if (score > it.score) {
                 scoreDao.updateScore(it.copy(score = score))
                 return
             }
         }
 
         // no score
-        scoreDao.insertScore(Score("", quizId.toString(), score, null))
+        scoreDao.insertScore(
+            Score(
+                quizId = quizId.toString(),
+                score = score, username = null
+            )
+        )
 
     }
 
@@ -98,10 +103,10 @@ class QuestionsUseCaseImpl(
         return settingsDao.getSettingsFlow().firstOrNull()?.streak ?: 0
     }
 
-    private suspend fun updateDailyTriviaStreak(score: Int){
-        if (score > 1){
+    private suspend fun updateDailyTriviaStreak(score: Int) {
+        if (score > 1) {
             settingsDao.getSettingsFlow().firstOrNull {
-                if (it?.streak == 0){
+                if (it?.streak == 0) {
                     settingsDao.setStreakStartDate()
                 }
                 settingsDao.increaseStreak()

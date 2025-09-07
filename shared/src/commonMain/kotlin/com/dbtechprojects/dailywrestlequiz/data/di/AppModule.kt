@@ -6,6 +6,7 @@ import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.Q
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.ScoreDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.getRoomDatabase
+import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
@@ -16,12 +17,15 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.SyncManager
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
+import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCase
+import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModelImpl
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -43,12 +47,12 @@ object AppModule {
     val appModule = module {
         single { SyncManager(get(), get()) }  // Koin injects QuestionDao automatically here
         single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get(), get()) }
-        single<TimeTrialUseCase> { TimeTrialUseCaseImpl() }
+        single<TimeTrialUseCase> { TimeTrialUseCaseImpl(get(), get()) }
         single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get()) }
         single<QuizUseCase> { QuizUseCaseImpl(get()) }
+        single<VersusModeUseCase>{ VersusModeUseCaseImpl(get()) }
         single<HomeViewModel> { HomeViewModelImpl(get(), get()) }
         single { TimerUtils() }
-        single {  }
 
         factory { (args: ArgPersistence<Int?>)
 
@@ -57,6 +61,8 @@ object AppModule {
         single { QuizViewModelImpl(get()) }
 
         single { TimeTrialListViewModelImpl(get()) }
+
+        single { VersusViewModelImpl(get()) }
 
         factory { (args: ArgPersistence<Int>) ->
             TimeTrialGameViewModelImpl(get(), get(), args)

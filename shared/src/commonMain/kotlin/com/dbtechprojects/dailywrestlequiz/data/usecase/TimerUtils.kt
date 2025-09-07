@@ -13,6 +13,16 @@ class TimerUtils {
         return "$minutes:$secondsText"
     }
 
+    fun getMinutesAndSecondsFromSeconds(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+
+        val minStr = if (minutes < 10) "0$minutes" else "$minutes"
+        val secStr = if (remainingSeconds < 10) "0$remainingSeconds" else "$remainingSeconds"
+
+        return "$minStr:$secStr"
+    }
+
     fun formatTimeFromSeconds(seconds: Int): String {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60

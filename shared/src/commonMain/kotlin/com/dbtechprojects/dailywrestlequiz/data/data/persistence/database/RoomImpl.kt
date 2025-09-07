@@ -10,10 +10,11 @@ import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.S
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Score
 import com.dbtechprojects.dailywrestlequiz.data.model.Settings
+import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrialScore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
-@Database(entities = [Question::class, Settings::class, Score::class], version = 1)
+@Database(entities = [Question::class, Settings::class, Score::class, TimeTrialScore::class], version = 1)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
 

@@ -167,7 +167,9 @@ class TimeTrialGameViewModelImpl(
         _win.value = true
         _winTime.value = timerUtils.formatTimeFromSeconds(elapsedTime)
         viewModelScope.launch(Dispatchers.IO) {
-            timeTrialUseCase.saveTime(elapsedTime)
+            timeTrialId.get(ARG_TIME_TRIAL_ID)?.let {
+                timeTrialUseCase.saveTime(elapsedTime, it)
+            }
         }
         timerJob.cancel()
     }

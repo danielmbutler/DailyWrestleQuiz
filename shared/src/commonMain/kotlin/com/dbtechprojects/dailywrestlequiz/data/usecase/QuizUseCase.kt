@@ -16,7 +16,7 @@ class QuizUseCaseImpl(private val scoreDao: ScoreDao) : QuizUseCase {
             it.copy(
                 highestScore = scoreDao.getScore(it.id)?.score ?: 0,
             )
-        }
+        }.sortedBy { it.order }
     }
 
     override fun getQuiz(id: Int): Quiz? {

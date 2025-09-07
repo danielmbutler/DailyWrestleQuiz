@@ -50,5 +50,7 @@
     <string name="entries">Entries</string>
     <string name="you_already_played_today">You already played today !</string>
     <string name="close">Close</string>
-    <string name="high_score">high score</string>
+    <string name="high_score">High score</string>
+    <string name="fastest_Time">Fastest time</string>
+    <string name="can_you_beat_our_champions">Can you beat our Champions?</string>
 </resources>

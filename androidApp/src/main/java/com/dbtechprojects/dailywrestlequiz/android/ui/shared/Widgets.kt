@@ -1,5 +1,6 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.shared
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import java.nio.file.WatchEvent
 
 
 @Composable
@@ -70,11 +73,12 @@ fun QuestionTimerTypeTwo(
     scoreText: String,
     progress: Float,
     timeRemainingText: String
-){
+) {
     Column {
         Row(
             modifier = Modifier
-                .fillMaxWidth().padding(6.dp),
+                .fillMaxWidth()
+                .padding(6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -108,3 +112,21 @@ fun QuestionTimerTypeTwo(
     }
 
 }
+
+@Composable
+fun BackButton(navController: NavController) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.padding(
+                top = 36.dp,
+                start = 24.dp,
+                end = 24.dp,
+                bottom = 12.dp).clickable{
+                navController.popBackStack()
+            }
+        ) {
+            PrimaryBodySmall("Back")
+        }
+    }
+}
+

@@ -19,8 +19,10 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialGameScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusListScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.ArgPersistenceImplementation
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.HomeViewModelFactory
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getHomeViewModel
@@ -28,6 +30,7 @@ import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewMode
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialGameViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialListViewModel
+import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getVersusViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModel
 
@@ -68,7 +71,7 @@ fun AppNavHost(
                     navController.navigate(NavRoutes.TIME_TRIAL)
                 },
                 onNavigateToVersus = {
-                    // TODO: Add navigation route
+                    navController.navigate(NavRoutes.VERSUS)
                 },
                 viewModel = getHomeViewModel()
             )
@@ -81,6 +84,7 @@ fun AppNavHost(
                             "${QuestionViewModel.ARG_QUESTION_COUNT}=1"
                 )
             })
+            BackButton(navController)
         }
 
         composable(NavRoutes.QUIZ) {
@@ -89,6 +93,7 @@ fun AppNavHost(
                         "${NavRoutes.QUESTION}/$it?" +
                         "${QuestionViewModel.ARG_QUESTION_COUNT}=0")
             })
+            BackButton(navController)
         }
         composable(NavRoutes.TIME_TRIAL) {
             TimeTrialListScreen(
@@ -97,6 +102,7 @@ fun AppNavHost(
                         navController.navigate("${NavRoutes.TIME_TRIAL_GAME}/$it")
                     }
             )
+            BackButton(navController)
         }
 
         composable(
@@ -133,6 +139,13 @@ fun AppNavHost(
             val args = ArgPersistenceImplementation<Int>(savedStateHandle = entry.savedStateHandle )
 
             TimeTrialGameScreen(getTimeTrialGameViewModel(args))
+        }
+
+        composable(NavRoutes.VERSUS) {
+            VersusListScreen(
+                getVersusViewModel()
+            )
+            BackButton(navController)
         }
     }
 }

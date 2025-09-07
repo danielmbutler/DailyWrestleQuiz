@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -99,8 +100,14 @@ fun QuizSection(
                                 textAlign = TextAlign.Center,
                                 color = androidx.compose.ui.graphics.Color.White
                             )
-
-                            PrimaryBodySmall(stringResource(R.string.high_score) + ": " + it.highestScore)
+                            if (it.highestScore != 0) {
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    PrimaryBodySmall(stringResource(R.string.high_score) + ": " + it.highestScore)
+                                }
+                            }
                         }
 
                     }

@@ -26,6 +26,20 @@ data class Quiz(
 //        const val VERSUS = 3
 //        const val WHEEL_OF_TRIVIA = 4
 
+        val versusQuiz = Quiz(
+            id = 9998,
+            name = "",
+            timeLimit = 10,
+            questions = 10,
+            color = "",
+            company = "",
+            decade = "",
+            ppv = "",
+            special = 0,
+            order = 0,
+            disabled = false
+        )
+
         fun getQuiz(): List<Quiz> {
             return listOf(
                 Quiz(1, "ATTITUDE ERA", 20, 20, "#B22222", "WWE", "90s", "", 1, 1),       // Deep red (fire brick)
