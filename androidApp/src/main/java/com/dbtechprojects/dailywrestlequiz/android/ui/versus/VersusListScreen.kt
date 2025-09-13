@@ -44,7 +44,7 @@ import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 
 @Composable
 fun VersusListScreen(
-    versusViewModel: VersusViewModel
+    versusViewModel: VersusViewModel,
 ) {
     val versusModes by versusViewModel.versusModes.collectAsState()
 
@@ -65,25 +65,7 @@ fun VersusListScreen(
     }
 }
 
-fun getImageRes(versusMode: VersusMode): Int {
-    return when (versusMode.name) {
-        VersusMode.FACT_FIEND -> {
-            R.drawable.fact_fiend
-        }
 
-        VersusMode.QUIZ_MASTER -> {
-            R.drawable.quiz_master
-        }
-
-        VersusMode.TRIVIA_TITAN -> {
-            R.drawable.trivia_titan
-        }
-
-        else -> {
-            R.drawable.quiz_master
-        }
-    }
-}
 
 
 @Composable
@@ -117,7 +99,7 @@ fun VersusSection(
                     ) {
 
                         Image(
-                            painter = painterResource(id = getImageRes(it)),
+                            painter = painterResource(id = UiUtils.getVersusImageRes(it)),
                             contentDescription = it.name,
                             modifier = Modifier
                                 .size(120.dp)

@@ -62,8 +62,9 @@ object AppModule {
 
         single { TimeTrialListViewModelImpl(get()) }
 
-        single { VersusViewModelImpl(get()) }
-
+        factory { (args: ArgPersistence<String?>) ->
+            VersusViewModelImpl(get(), get(), get(), args)
+        }
         factory { (args: ArgPersistence<Int>) ->
             TimeTrialGameViewModelImpl(get(), get(), args)
         }

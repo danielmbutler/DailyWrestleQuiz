@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.dbtechprojects.dailywrestlequiz.android.R
+import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode
 
 object UiUtils {
     fun hexToColor(hex: String): Color {
@@ -20,5 +22,25 @@ object UiUtils {
 
         val shareIntent = Intent.createChooser(sendIntent, null)
          context.startActivity(shareIntent)
+    }
+
+    fun getVersusImageRes(versusMode: VersusMode): Int {
+        return when (versusMode.name) {
+            VersusMode.FACT_FIEND -> {
+                R.drawable.fact_fiend
+            }
+
+            VersusMode.QUIZ_MASTER -> {
+                R.drawable.quiz_master
+            }
+
+            VersusMode.TRIVIA_TITAN -> {
+                R.drawable.trivia_titan
+            }
+
+            else -> {
+                R.drawable.quiz_master
+            }
+        }
     }
 }

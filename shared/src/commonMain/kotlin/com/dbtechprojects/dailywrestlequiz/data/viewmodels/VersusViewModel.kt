@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-interface VersusViewModel{
+interface VersusViewModel {
+    val versusModes: StateFlow<List<VersusMode>>
     val question: StateFlow<Question?>
     val questionsAmount: StateFlow<Int>
     val currentQuestionNumber: StateFlow<Int>
@@ -45,6 +46,7 @@ interface VersusViewModel{
         const val ARG_QUIZ_NAME = "QuizName"
     }
 }
+
 class VersusViewModelImpl(
     private val timerUtils: TimerUtils,
     private val versusModeUseCase: VersusModeUseCase,
@@ -56,6 +58,9 @@ class VersusViewModelImpl(
 
     private val _question = MutableStateFlow<Question?>(null)
     override val question: StateFlow<Question?> = _question.asStateFlow()
+
+    private val _versusModes = MutableStateFlow<List<VersusMode>>(emptyList())
+    override val versusModes: StateFlow<List<VersusMode>> = _versusModes.asStateFlow()
 
     private val _questionsAmount = MutableStateFlow(0)
     override val questionsAmount: StateFlow<Int> = _questionsAmount
@@ -105,15 +110,13 @@ class VersusViewModelImpl(
     private var versusMode: VersusMode? = null
 
 
-
-
-    private suspend fun setCustomMessage(name: String, win: Boolean, draw: Boolean) {
+    private fun setCustomMessage(name: String, win: Boolean, draw: Boolean) {
         _customEndMessage.value =
             if (!win) {
                 var text = "Unlucky!"
                 text += "\n You lost against $name!"
                 text
-            } else if(draw){
+            } else if (draw) {
                 var text = "Unlucky!"
                 text += "\n You drew against $name!"
                 text
@@ -140,6 +143,7 @@ class VersusViewModelImpl(
                     _opponentScore.value = 0
                     startTimer(Quiz.versusQuiz.timeLimit)
                 }
+                _versusModes.value = versusModeUseCase.getVersusMode()
             }
         }
     }
@@ -157,14 +161,12 @@ class VersusViewModelImpl(
             _selectedAnswer.value = answer
 
             if (_currentQuestionNumber.value == _questionsAmount.value) {
-                viewModelScope.launch {
-                    setCustomMessage(
-                        name = versusMode?.name ?: "",
-                        win = _currentScore.value > _opponentScore.value,
-                        draw = _currentScore.value == _opponentScore.value
-                    )
-                    _isGameOver.value = true
-                }
+                setCustomMessage(
+                    name = versusMode?.name ?: "",
+                    win = _currentScore.value > _opponentScore.value,
+                    draw = _currentScore.value == _opponentScore.value
+                )
+                _isGameOver.value = true
             }
         }
     }
@@ -217,7 +219,7 @@ class VersusViewModelImpl(
         _elapsedTime.value = 0
         _opponentScore.value = 0
         viewModelScope.launch {
-           startTimer(Quiz.versusQuiz.timeLimit)
+            startTimer(Quiz.versusQuiz.timeLimit)
         }
     }
 
