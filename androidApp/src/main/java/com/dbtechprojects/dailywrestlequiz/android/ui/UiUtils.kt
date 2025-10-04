@@ -24,8 +24,8 @@ object UiUtils {
          context.startActivity(shareIntent)
     }
 
-    fun getVersusImageRes(versusMode: VersusMode): Int {
-        return when (versusMode.name) {
+    fun getVersusImageRes(versusName: String): Int {
+        return when (versusName) {
             VersusMode.FACT_FIEND -> {
                 R.drawable.fact_fiend
             }

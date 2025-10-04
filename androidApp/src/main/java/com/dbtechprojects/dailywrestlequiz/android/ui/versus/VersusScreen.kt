@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,11 +31,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.AnswerSection
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.NextButton
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionBox
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreenHeaderRow
+import com.dbtechprojects.dailywrestlequiz.android.ui.question.ResultStatement
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.FullScreenLoadingSpinner
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.GreenButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyMedium
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryButton
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.QuestionTimer
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
+import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -106,8 +118,10 @@ fun VersusScreen(
                         currentScore
                     )
                 }
-                CurrentScore(
+                ScoreSection(
                     currentScore = currentScore,
+                    opponentScore= opponentScore,
+                    quizName = quizName,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(24.dp)
@@ -116,6 +130,90 @@ fun VersusScreen(
         }
     }
 
+}
+
+@Composable
+fun GameScreen(
+    viewModel: VersusViewModel,
+    progress: Float,
+    remainingText: String,
+    currentQuestion: Question?,
+    currentIndex: Int,
+    questionsSize: Int,
+    selectedAnswer: Int?,
+    currentScore: Int
+) {
+    QuestionScreenHeaderRow(
+        currentIndex,
+        questionsSize = questionsSize
+    )
+    QuestionTimer(
+        progress,
+        remainingText
+    )
+    QuestionBox(
+        question = currentQuestion?.question ?: ""
+    )
+
+    AnswerSection(
+        answers = Question.getAnswers(currentQuestion?.answers ?: ""),
+        onClickListener = { answer ->
+            viewModel.setAnswer(answer)
+        },
+        correctAnswer = currentQuestion?.answer ?: 0,
+        selectedAnswer = selectedAnswer
+    )
+
+    if (selectedAnswer != null) {
+        ResultStatement(
+            isCorrect = selectedAnswer == currentQuestion?.answer,
+            isOutOfTime = selectedAnswer == -1,
+            currentScore = currentScore,
+            isLast = currentIndex == questionsSize
+        )
+        if (currentIndex != questionsSize) {
+            NextButton { viewModel.requestNextQuestion() }
+        }
+    }
+}
+
+@Composable
+fun ScoreSection(
+    currentScore: Int,
+    opponentScore: Int,
+    quizName: String,
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(0.50f),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = UiUtils.getVersusImageRes(quizName)),
+                contentDescription = quizName,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+            )
+            PrimaryBodyMedium("Your Score: " + "${currentScore} ")
+        }
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = UiUtils.getVersusImageRes(quizName)),
+                contentDescription = quizName,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+            )
+            PrimaryBodyMedium("$quizName: "+ "${opponentScore}")
+        }
+    }
 }
 
 @Composable
@@ -160,6 +258,18 @@ fun EndScreen(
                 Image(
                     painter = painterResource(id = R.drawable.belt),
                     contentDescription = "Trivia Championship",
+                    modifier = Modifier
+                        .size(320.dp)
+                        .padding(
+                            bottom = 24.dp
+                        )
+                )
+            } else {
+                Image(
+                    painter = painterResource(
+                        UiUtils.getVersusImageRes(quizName)
+                    ),
+                    contentDescription = quizName,
                     modifier = Modifier
                         .size(320.dp)
                         .padding(

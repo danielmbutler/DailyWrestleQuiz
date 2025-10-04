@@ -47,6 +47,21 @@ fun PrimaryBodyLarge(
 }
 
 @Composable
+fun PrimaryBodyMedium(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onBackground
+) {
+    Text(
+        text = text, modifier = modifier,
+        style = MaterialTheme.typography.labelLarge,
+        color = color,
+        textAlign = textAlign,
+    )
+}
+
+@Composable
 fun PrimaryBodyLargeAnimateSize(
     text: String,
     shouldAnimate: Boolean,

@@ -33,7 +33,7 @@ class QuizViewModelImpl(
     init {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            delay(1000)
+            delay(500)
             _quizzes.value = quizUseCase.getQuizzes()
             _isLoading.value = false
         }

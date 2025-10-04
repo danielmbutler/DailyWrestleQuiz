@@ -141,10 +141,11 @@ class VersusViewModelImpl(
                     _quizName.value = it
                     _isLoading.value = false
                     _opponentScore.value = 0
+                    _currentScore.value = 0
                     startTimer(Quiz.versusQuiz.timeLimit)
                 }
-                _versusModes.value = versusModeUseCase.getVersusMode()
             }
+            _versusModes.value = versusModeUseCase.getVersusMode()
         }
     }
 
@@ -153,11 +154,12 @@ class VersusViewModelImpl(
             answered = true
             if (answer == question.value?.answer) {
                 // correct answer
-                updateScore()
+                updateUserScore()
                 question.value?.question_id?.let {
                     updateTimesAnswered(it)
                 }
             }
+            updateOppenentScore()
             _selectedAnswer.value = answer
 
             if (_currentQuestionNumber.value == _questionsAmount.value) {
@@ -171,12 +173,29 @@ class VersusViewModelImpl(
         }
     }
 
+    private fun updateOppenentScore() {
+        _elapsedTime.value.let {
+            val remaining = Quiz.versusQuiz.timeLimit.minus(it)
+            val opponentCorrect = versusMode?.guessCorrect()
+
+            if (opponentCorrect == true) {
+                if (remaining >= 15) {
+                    _opponentScore.value += 150
+                } else if (remaining > 10) {
+                    _opponentScore.value += 100
+                } else if (remaining > 5) {
+                    _opponentScore.value += 50
+                }
+            }
+        }
+    }
+
     /**
      * score for getting it right in the first five seconds +150
      * score for getting it right between 5 to 10 seconds + 100
      * score for getting it right between 11 and 15 seconds + 50
      */
-    private fun updateScore() {
+    private fun updateUserScore() {
         _elapsedTime.value.let {
             val remaining = Quiz.versusQuiz.timeLimit.minus(it)
             val opponentCorrect = versusMode?.guessCorrect()
@@ -217,7 +236,6 @@ class VersusViewModelImpl(
         _currentQuestionNumber.value += 1
         _progress.value = 0f
         _elapsedTime.value = 0
-        _opponentScore.value = 0
         viewModelScope.launch {
             startTimer(Quiz.versusQuiz.timeLimit)
         }

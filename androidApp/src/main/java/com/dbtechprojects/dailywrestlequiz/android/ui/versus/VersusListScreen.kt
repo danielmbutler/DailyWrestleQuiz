@@ -5,9 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,23 +26,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ReusableRow
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ScreenCenterTitle
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.SurfaceSection
-import com.dbtechprojects.dailywrestlequiz.android.ui.theme.WrestleGold
-import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
 import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 
 
 @Composable
 fun VersusListScreen(
     versusViewModel: VersusViewModel,
+    navToVersusGame: (String) -> Unit,
 ) {
     val versusModes by versusViewModel.versusModes.collectAsState()
 
@@ -59,7 +53,7 @@ fun VersusListScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            VersusSection(versusModes)
+            VersusSection(versusModes, navToVersusGame)
         }
 
     }
@@ -71,6 +65,7 @@ fun VersusListScreen(
 @Composable
 fun VersusSection(
     list: List<VersusMode>,
+    navToVersusGame: (String) -> Unit,
 ) {
     val itemHeight = 80.dp
     val spacing = 8.dp
@@ -95,11 +90,13 @@ fun VersusSection(
                 itemsIndexed(list) { index, it ->
                     ReusableRow(
                         color = UiUtils.hexToColor(it.color),
-                        onClick = {}
+                        onClick = {
+                            navToVersusGame.invoke(it.name)
+                        }
                     ) {
 
                         Image(
-                            painter = painterResource(id = UiUtils.getVersusImageRes(it)),
+                            painter = painterResource(id = UiUtils.getVersusImageRes(it.name)),
                             contentDescription = it.name,
                             modifier = Modifier
                                 .size(120.dp)

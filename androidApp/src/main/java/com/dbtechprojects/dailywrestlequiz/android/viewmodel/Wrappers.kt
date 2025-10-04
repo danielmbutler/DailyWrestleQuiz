@@ -148,21 +148,32 @@ fun getHomeViewModel(): HomeViewModel {
 
 
 class VersusViewModelWrapper(
-    versusUseCase: VersusModeUseCase
-) : ViewModel(), VersusViewModel by VersusViewModelImpl(versusUseCase)
+    versusUseCase: VersusModeUseCase,
+    questionUseCase: QuestionsUseCase,
+    timerUtils: TimerUtils,
+    verusModeName: ArgPersistence<String?>,
+) : ViewModel(), VersusViewModel by VersusViewModelImpl(
+    timerUtils = timerUtils,
+    versusModeUseCase = versusUseCase,
+    questionsUseCase = questionUseCase,
+    args = verusModeName
+)
 
-class VersusViewModelFactory() : ViewModelProvider.Factory {
+class VersusViewModelFactory(private val args: ArgPersistence<String?>) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return VersusViewModelWrapper(
             getKoin().get(),
+            getKoin().get(),
+            getKoin().get(),
+            args,
         ) as T
     }
 }
 
 @Composable
-fun getVersusViewModel(): VersusViewModel {
+fun getVersusViewModel(args: ArgPersistence<String?>): VersusViewModel {
     return viewModel(factory =
-        VersusViewModelFactory()
+        VersusViewModelFactory(args)
     )
 }
 

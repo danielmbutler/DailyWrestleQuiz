@@ -23,6 +23,7 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialGameScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusListScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.ArgPersistenceImplementation
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.HomeViewModelFactory
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getHomeViewModel
@@ -31,8 +32,10 @@ import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialGameViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getVersusViewModel
+import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -142,10 +145,39 @@ fun AppNavHost(
         }
 
         composable(NavRoutes.VERSUS) {
+
             VersusListScreen(
-                getVersusViewModel()
+                getVersusViewModel(
+                    object :ArgPersistence<String?>{
+                        override fun get(argName: String): String? {
+                            return null
+                        }
+                    }
+                ),
+                navToVersusGame = {
+                    navController.navigate("${NavRoutes.VERSUS_GAME}/$it")
+                }
             )
             BackButton(navController)
+        }
+
+        composable(
+            route = "${NavRoutes.VERSUS_GAME}/{${VersusViewModel.ARG_QUIZ_NAME}}",
+            arguments = listOf(
+                navArgument(VersusViewModel.ARG_QUIZ_NAME) {
+                    type = NavType.StringType
+                }
+            )
+        ) { entry ->
+
+            val args = ArgPersistenceImplementation<String?>(savedStateHandle = entry.savedStateHandle )
+
+            VersusScreen(getVersusViewModel(args),  {
+                navController.navigate(NavRoutes.HOME) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            })
         }
     }
 }
