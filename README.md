@@ -69,7 +69,7 @@ A question selection algorithm ensures:
 
 Developed by **Daniel Butler**  
 📱 Mobile Developer
-Feedback, contributions, and ideas welcome!
+- Feedback, contributions, and ideas welcome!
 ---
 
 ## 🏁 License
