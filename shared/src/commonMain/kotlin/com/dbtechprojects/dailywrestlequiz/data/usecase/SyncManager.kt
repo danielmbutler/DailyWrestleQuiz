@@ -3,6 +3,7 @@ package com.dbtechprojects.dailywrestlequiz.data.usecase
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.file.decryptFileToJson
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.file.getKey
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Settings
 import kotlinx.coroutines.flow.firstOrNull
@@ -12,7 +13,9 @@ class SyncManager(
     private val questionDao: QuestionDao,
     private val settingsDao: SettingsDao
 ) {
-    private val key = "kjasdhfjshfkjsdhfksdjhfksdjfhsdk" // get from firebase
+    private val key = getKey().also {
+        println("key: " + it)
+    } // get from firebase
 
 
     suspend fun runSync(){

@@ -46,6 +46,7 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 24
+        buildConfigField("String", "ENCRYPTION_KEY", "\"${project.findProperty("encryption_key") ?: ""}\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -53,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        android.buildFeatures.buildConfig=true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
