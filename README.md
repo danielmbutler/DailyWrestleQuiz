@@ -67,12 +67,9 @@ A question selection algorithm ensures:
 
 ## 🧑‍💻 Developer
 
-Developed by **[Your Name]**  
-📱 Mobile Developer — Building **Daily Wrestle Trivia**
-
-Follow progress on [Twitter/X](https://twitter.com/)  
+Developed by **Daniel Butler**  
+📱 Mobile Developer
 Feedback, contributions, and ideas welcome!
-
 ---
 
 ## 🏁 License
