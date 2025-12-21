@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization") version libs.versions.kotlin.get()
+    alias(libs.plugins.kotlinSerialization)
     id("org.jetbrains.kotlin.plugin.compose") version libs.versions.kotlin.get()
 }
 
@@ -23,9 +23,11 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies{
+            implementation(libs.compose.runtime)
+        }
         commonMain.dependencies {
             implementation(libs.coroutines.core)
-            implementation(libs.compose.runtime)
 
             // Room KMP dependencies
             implementation(libs.room.runtime) // ✅ brings RoomDatabaseConstructor

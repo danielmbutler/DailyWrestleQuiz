@@ -1,15 +1,18 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui
 
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
+
 object NavRoutes {
-    const val HOME = "home"
-    const val QUIZ = "quiz"
-    const val QUESTION = "question"
-    const val WHEEL_OF_TRIVIA = "wheel_of_trivia"
-    const val TIME_TRIAL = "time_trial"
-    const val VERSUS = "versus"
 
-    const val VERSUS_GAME = "versus_game"
+     @Serializable data object Home: NavKey
+     @Serializable data object Quiz: NavKey
+     @Serializable data class Question(val quizId: Int, val amount: Int): NavKey
+     @Serializable data object WheelOfTrivia: NavKey
+     @Serializable data object TimeTrial: NavKey
+     @Serializable data object Versus: NavKey
 
-    const val TIME_TRIAL_GAME = "time_trial_game"
+     @Serializable data object VersusGame: NavKey
+     @Serializable data class TimeTrialGame(val timeTrialId: Int): NavKey
 
 }

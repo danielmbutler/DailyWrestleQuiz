@@ -3,12 +3,9 @@
 package com.dbtechprojects.dailywrestlequiz.android.viewmodel
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
-import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
@@ -17,6 +14,7 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCase
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelArgs
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModel
@@ -32,7 +30,7 @@ import org.koin.mp.KoinPlatform.getKoin
 class QuestionViewModelWrapper(
     quizUseCase: QuizUseCase,
     questionsUseCase: QuestionsUseCase,
-    args: ArgPersistence<Int?>,
+    args: QuestionViewModelArgs,
     timerUtils: TimerUtils
 ) : ViewModel(), QuestionViewModel by QuestionViewModelImpl(
     questionsUseCase = questionsUseCase,
@@ -42,7 +40,7 @@ class QuestionViewModelWrapper(
 )
 
 class QuestionViewModelFactory(
-    private val args: ArgPersistence<Int?>,
+    private val args: QuestionViewModelArgs,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return QuestionViewModelWrapper(
@@ -56,9 +54,11 @@ class QuestionViewModelFactory(
 
 @Composable
 fun getQuestionViewModel(
-    args: ArgPersistence<Int?>
+    args: QuestionViewModelArgs
 ): QuestionViewModel {
-    return viewModel(factory =
+    return viewModel(
+        key = "QuizViewModel",
+        factory =
         QuestionViewModelFactory(args)
     )
 }
@@ -77,7 +77,8 @@ class QuizViewModelFactory() : ViewModelProvider.Factory {
 
 @Composable
 fun getQuizViewModel(): QuizViewModel {
-    return viewModel(factory =
+    return viewModel(
+        factory =
         QuizViewModelFactory()
     )
 }
@@ -96,7 +97,9 @@ class TimeTrialListViewModelFactory() : ViewModelProvider.Factory {
 
 @Composable
 fun getTimeTrialListViewModel(): TimeTrialListViewModel {
-    return viewModel(factory =
+    return viewModel(
+        key = "TimeTrialListViewModel",
+        factory =
         TimeTrialListViewModelFactory()
     )
 }
@@ -104,7 +107,7 @@ fun getTimeTrialListViewModel(): TimeTrialListViewModel {
 class TimeTrialGameViewModelWrapper(
     timeTrialUseCase: TimeTrialUseCase,
     timerUtils: TimerUtils,
-    timeTrialId: ArgPersistence<Int>
+    timeTrialId: Int
 ) : ViewModel(), TimeTrialGameViewModel by
 TimeTrialGameViewModelImpl(
     timeTrialUseCase,
@@ -112,7 +115,7 @@ TimeTrialGameViewModelImpl(
     timeTrialId = timeTrialId
 )
 
-class TimeTrialGameViewModelFactory(private val timeTrialId: ArgPersistence<Int>) : ViewModelProvider.Factory {
+class TimeTrialGameViewModelFactory(private val timeTrialId: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return TimeTrialGameViewModelWrapper(
             getKoin().get(),
@@ -123,8 +126,10 @@ class TimeTrialGameViewModelFactory(private val timeTrialId: ArgPersistence<Int>
 }
 
 @Composable
-fun getTimeTrialGameViewModel(id: ArgPersistence<Int>): TimeTrialGameViewModel {
-    return viewModel(factory =
+fun getTimeTrialGameViewModel(id: Int): TimeTrialGameViewModel {
+    return viewModel(
+        key = "TimeTrialGameViewModel",
+        factory =
         TimeTrialGameViewModelFactory(id)
     )
 }
@@ -141,7 +146,9 @@ class HomeViewModelFactory() : ViewModelProvider.Factory {
 
 @Composable
 fun getHomeViewModel(): HomeViewModel {
-    return viewModel(factory =
+    return viewModel(
+        key = "HomeViewModel",
+        factory =
         HomeViewModelFactory()
     )
 }
@@ -151,15 +158,15 @@ class VersusViewModelWrapper(
     versusUseCase: VersusModeUseCase,
     questionUseCase: QuestionsUseCase,
     timerUtils: TimerUtils,
-    verusModeName: ArgPersistence<String?>,
+    verusModeName: String?,
 ) : ViewModel(), VersusViewModel by VersusViewModelImpl(
     timerUtils = timerUtils,
     versusModeUseCase = versusUseCase,
     questionsUseCase = questionUseCase,
-    args = verusModeName
+    versusName = verusModeName,
 )
 
-class VersusViewModelFactory(private val args: ArgPersistence<String?>) : ViewModelProvider.Factory {
+class VersusViewModelFactory(private val args: String?) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return VersusViewModelWrapper(
             getKoin().get(),
@@ -171,8 +178,10 @@ class VersusViewModelFactory(private val args: ArgPersistence<String?>) : ViewMo
 }
 
 @Composable
-fun getVersusViewModel(args: ArgPersistence<String?>): VersusViewModel {
-    return viewModel(factory =
+fun getVersusViewModel(args: String?): VersusViewModel {
+    return viewModel(
+        key = "VersusViewModel",
+        factory =
         VersusViewModelFactory(args)
     )
 }

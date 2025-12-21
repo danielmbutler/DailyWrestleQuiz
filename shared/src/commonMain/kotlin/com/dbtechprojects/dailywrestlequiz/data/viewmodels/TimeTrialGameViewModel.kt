@@ -1,10 +1,7 @@
 package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
-import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
-import com.dbtechprojects.dailywrestlequiz.data.model.TimeTrial
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimeTrialUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModel.Companion.ARG_TIME_TRIAL_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -31,16 +28,12 @@ interface TimeTrialGameViewModel {
 
     fun reset()
 
-    companion object {
-        const val ARG_TIME_TRIAL_ID = "timeTrialId"
-    }
-
 }
 
 class TimeTrialGameViewModelImpl(
     private val timeTrialUseCase: TimeTrialUseCase,
     private val timerUtils: TimerUtils,
-    private val timeTrialId: ArgPersistence<Int>,
+    private val timeTrialId: Int,
 ) : BaseViewModel(), TimeTrialGameViewModel {
 
     private var timeTrialItemsSize = 0
@@ -94,7 +87,7 @@ class TimeTrialGameViewModelImpl(
     private var originalKeyOrder: List<String> = emptyList()
 
     private fun setup(){
-        timeTrialId.get(ARG_TIME_TRIAL_ID)?.let { id ->
+        timeTrialId.let { id ->
             timeTrialUseCase.getTimeTrial(id = id)?.let { timeTrial ->
                 timeTrialUseCase.getDetails(id).let { namesAndAliases ->
                     originalKeyOrder = namesAndAliases.keys.toList() // Store original order
@@ -167,7 +160,7 @@ class TimeTrialGameViewModelImpl(
         _win.value = true
         _winTime.value = timerUtils.formatTimeFromSeconds(elapsedTime)
         viewModelScope.launch(Dispatchers.IO) {
-            timeTrialId.get(ARG_TIME_TRIAL_ID)?.let {
+            timeTrialId.let {
                 timeTrialUseCase.saveTime(elapsedTime, it)
             }
         }

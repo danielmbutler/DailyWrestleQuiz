@@ -1,6 +1,5 @@
 package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
-import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode
@@ -8,7 +7,6 @@ import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode.Companion.guess
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
 import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCase
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel.Companion.ARG_QUIZ_NAME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
@@ -41,17 +39,13 @@ interface VersusViewModel {
     fun setAnswer(answer: Int)
 
     fun requestNextQuestion()
-
-    companion object {
-        const val ARG_QUIZ_NAME = "QuizName"
-    }
 }
 
 class VersusViewModelImpl(
     private val timerUtils: TimerUtils,
     private val versusModeUseCase: VersusModeUseCase,
     private val questionsUseCase: QuestionsUseCase,
-    private val args: ArgPersistence<String?>,
+    private val versusName: String? = null,
 ) : BaseViewModel(), VersusViewModel {
 
     private var questionsList = emptyList<Question>()
@@ -132,7 +126,7 @@ class VersusViewModelImpl(
     init {
         _isLoading.value = true
         viewModelScope.launch {
-            args.get(ARG_QUIZ_NAME)?.let {
+            versusName?.let {
                 versusModeUseCase.getVersusMode(it)?.let { quiz ->
                     versusMode = quiz
                     requestQuestions()

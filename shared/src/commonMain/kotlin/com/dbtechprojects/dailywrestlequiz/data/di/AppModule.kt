@@ -21,10 +21,15 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.VersusModeUseCaseImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelArgs
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModelImpl
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -54,18 +59,18 @@ object AppModule {
         single<HomeViewModel> { HomeViewModelImpl(get(), get()) }
         single { TimerUtils() }
 
-        factory { (args: ArgPersistence<Int?>)
+        factory<QuestionViewModel> { (args: QuestionViewModelArgs)
 
             -> QuestionViewModelImpl(get(), get(), args, get()) }
 
-        single { QuizViewModelImpl(get()) }
+        single<QuizViewModel> { QuizViewModelImpl(get()) }
 
-        single { TimeTrialListViewModelImpl(get()) }
+        single<TimeTrialListViewModel> { TimeTrialListViewModelImpl(get()) }
 
-        factory { (args: ArgPersistence<String?>) ->
+        factory<VersusViewModel> { (args: String?) ->
             VersusViewModelImpl(get(), get(), get(), args)
         }
-        factory { (args: ArgPersistence<Int>) ->
+        factory<TimeTrialGameViewModelImpl> { (args: Int) ->
             TimeTrialGameViewModelImpl(get(), get(), args)
         }
     }

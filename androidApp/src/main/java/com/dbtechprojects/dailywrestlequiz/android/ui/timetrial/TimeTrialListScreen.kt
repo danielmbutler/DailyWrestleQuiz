@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils
-import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodyLarge
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBodySmall
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.PrimaryBorderedBox

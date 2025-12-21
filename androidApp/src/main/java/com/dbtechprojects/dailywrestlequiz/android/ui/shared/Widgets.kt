@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import java.nio.file.WatchEvent
 
 
@@ -113,20 +112,20 @@ fun QuestionTimerTypeTwo(
 
 }
 
-@Composable
-fun BackButton(navController: NavController) {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier.padding(
-                top = 36.dp,
-                start = 24.dp,
-                end = 24.dp,
-                bottom = 12.dp).clickable{
-                navController.popBackStack()
-            }
-        ) {
-            PrimaryBodySmall("Back")
-        }
-    }
-}
+//@Composable
+//fun BackButton(pop: () -> Unit) {
+//    Box(modifier = Modifier.fillMaxWidth()) {
+//        Column(
+//            modifier = Modifier.padding(
+//                top = 36.dp,
+//                start = 24.dp,
+//                end = 24.dp,
+//                bottom = 12.dp).clickable{
+//                pop.invoke()
+//            }
+//        ) {
+//            PrimaryBodySmall("Back")
+//        }
+//    }
+//}
 

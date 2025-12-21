@@ -1,7 +1,5 @@
 package com.dbtechprojects.dailywrestlequiz.data.viewmodels
 
-import com.dbtechprojects.dailywrestlequiz.data.di.ArgPersistence
-import com.dbtechprojects.dailywrestlequiz.data.di.StubArgPersistence
 import com.dbtechprojects.dailywrestlequiz.data.model.Question
 import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionUseCaseStub
@@ -9,8 +7,6 @@ import com.dbtechprojects.dailywrestlequiz.data.usecase.QuestionsUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCase
 import com.dbtechprojects.dailywrestlequiz.data.usecase.QuizUseCaseStub
 import com.dbtechprojects.dailywrestlequiz.data.usecase.TimerUtils
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel.Companion.ARG_QUESTION_COUNT
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel.Companion.ARG_QUIZ_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
@@ -42,17 +38,16 @@ interface QuestionViewModel {
     fun setAnswer(answer: Int)
 
     fun requestNextQuestion()
-
-    companion object {
-        const val ARG_QUIZ_ID = "quizId"
-        const val ARG_QUESTION_COUNT = "questionCount"
-    }
 }
 
+data class QuestionViewModelArgs(
+    val questionCount: Int,
+    val quizId: Int?
+)
 class QuestionViewModelImpl(
     private val questionsUseCase: QuestionsUseCase,
     private val quizUseCase: QuizUseCase,
-    private val args: ArgPersistence<Int?>,
+    private val args: QuestionViewModelArgs,
     private val timerUtils: TimerUtils,
 ) : BaseViewModel(), QuestionViewModel {
 
@@ -109,17 +104,17 @@ class QuestionViewModelImpl(
 
 
     private fun getQuestionsAmount(quiz: Quiz): Int {
-        args.get(ARG_QUESTION_COUNT).let {
+        args.questionCount.let {
             return if (it == 0) {
                 quiz.questions
             } else {
-                it ?: 1
+                it
             }
         }
     }
 
     private fun getQuizName(quiz: Quiz): String {
-        args.get(ARG_QUESTION_COUNT).let {
+        args.questionCount.let {
             return if (it == 0) {
                 quiz.name
             } else {
@@ -130,7 +125,7 @@ class QuestionViewModelImpl(
 
     private suspend fun setCustomMessage() {
         _customEndMessage.value =
-            if (args.get(ARG_QUESTION_COUNT) == 0) {
+            if (args.questionCount == 0) {
                 null
             } else if (_streak.value == 0) {
                 var text = "Unlucky!"
@@ -148,7 +143,7 @@ class QuestionViewModelImpl(
     init {
         _isLoading.value = true
         viewModelScope.launch {
-            args.get(ARG_QUIZ_ID)?.let {
+            args.quizId?.let {
                 quizUseCase.getQuiz(it)?.let { quiz ->
                     requestQuestions(quiz)
                     _state.value = questionsList.firstOrNull()
@@ -188,7 +183,7 @@ class QuestionViewModelImpl(
     private suspend fun saveScore() {
         quiz?.let {
             var quizId = it.id
-            if (args.get(ARG_QUESTION_COUNT) == 1) {
+            if (args.questionCount == 1) {
                 quizId = Quiz.DAILY_TRIVIA
             }
             questionsUseCase.saveScore(quizId, _currentScore.value)
@@ -239,9 +234,7 @@ class QuestionViewModelImpl(
         questionsList = quiz.let {
             questionsUseCase.getQuestions(
                 it,
-                args.get(
-                    ARG_QUESTION_COUNT
-                )
+                args.questionCount
             )
         }
     }
@@ -268,7 +261,7 @@ class QuestionViewModelImpl(
         fun stub(): QuestionViewModel {
             return QuestionViewModelImpl(
                 questionsUseCase = QuestionUseCaseStub(),
-                args = StubArgPersistence<Int>(null),
+                args = QuestionViewModelArgs(0,0),
                 timerUtils = TimerUtils(),
                 quizUseCase = QuizUseCaseStub(),
             )

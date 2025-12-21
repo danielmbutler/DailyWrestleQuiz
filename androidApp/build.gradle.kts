@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinSerialization)
     id("org.jetbrains.kotlin.plugin.compose") version libs.versions.kotlin.get() // ✅ Add this
 }
 
 android {
     namespace = "com.dbtechprojects.dailywrestlequiz.android"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.dbtechprojects.dailywrestlequiz.android"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }
@@ -47,9 +48,13 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.navigation.compose)
     implementation(libs.koin.android)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+
+    // If using the ViewModel add-on library
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     // Spin Wheel
     implementation("com.github.commandiron:SpinWheelCompose:1.1.1")
 }
