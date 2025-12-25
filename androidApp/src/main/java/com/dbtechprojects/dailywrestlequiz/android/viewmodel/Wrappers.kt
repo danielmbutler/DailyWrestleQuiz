@@ -2,6 +2,7 @@
 
 package com.dbtechprojects.dailywrestlequiz.android.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -54,7 +55,7 @@ class QuestionViewModelFactory(
 
 @Composable
 fun getQuestionViewModel(
-    args: QuestionViewModelArgs
+    args: QuestionViewModelArgs,
 ): QuestionViewModel {
     return viewModel(
         key = "QuizViewModel",

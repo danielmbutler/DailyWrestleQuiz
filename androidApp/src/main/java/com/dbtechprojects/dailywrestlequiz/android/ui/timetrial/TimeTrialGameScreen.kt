@@ -405,12 +405,12 @@ fun TimeTrialTextField(
                 colorFilter = ColorFilter.tint(
                     MaterialTheme.colorScheme.onSurface
                 ),
-//                modifier = Modifier.clickable(
-//                    enabled = true,
-//                    onClick = onClick,
-//                    indication = LocalIndication.current,
-//                    interactionSource =  remember { MutableInteractionSource() }
-//                )
+                modifier = Modifier.clickable(
+                    enabled = true,
+                    onClick = onClick,
+                    indication = LocalIndication.current,
+                    interactionSource =  remember { MutableInteractionSource() }
+                )
             )
         }
     )

@@ -44,6 +44,7 @@ data class QuestionViewModelArgs(
     val questionCount: Int,
     val quizId: Int?
 )
+
 class QuestionViewModelImpl(
     private val questionsUseCase: QuestionsUseCase,
     private val quizUseCase: QuizUseCase,
@@ -139,8 +140,12 @@ class QuestionViewModelImpl(
 
     }
 
-
     init {
+        setupNewQuiz()
+    }
+
+
+    private fun setupNewQuiz() {
         _isLoading.value = true
         viewModelScope.launch {
             args.quizId?.let {
@@ -151,6 +156,7 @@ class QuestionViewModelImpl(
                     _quizName.value = getQuizName(quiz)
                     this@QuestionViewModelImpl.quiz = quiz
                     _isLoading.value = false
+                    _isGameOver.value = false
                     startTimer(quiz.timeLimit)
                 }
             }
@@ -261,7 +267,7 @@ class QuestionViewModelImpl(
         fun stub(): QuestionViewModel {
             return QuestionViewModelImpl(
                 questionsUseCase = QuestionUseCaseStub(),
-                args = QuestionViewModelArgs(0,0),
+                args = QuestionViewModelArgs(0, 0),
                 timerUtils = TimerUtils(),
                 quizUseCase = QuizUseCaseStub(),
             )
