@@ -39,7 +39,7 @@ Players can test their wrestling knowledge across eras, companies, and pay-per-v
 
 ## 📸 Screenshots
 | Home / Daily Quiz | Versus Mode | Gameplay |
-|-------------------|------------|----------|
+|------------|------------|----------|
 | <img src="screenshots/img_4.png" width="250" /> | <img src="screenshots/img_1.png" width="250" /> | <img src="screenshots/img_1.png" width="250" /> |
 *A glimpse at the Daily Quiz flow, and in-game trivia experience.*
 
