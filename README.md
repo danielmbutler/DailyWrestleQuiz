@@ -39,9 +39,9 @@ Players can test their wrestling knowledge across eras, companies, and pay-per-v
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/img_4.png" width="250" />
-  <img src="screenshots/img_1.png" width="250" />
-  <img src="screenshots/img_2.png" width="250" />
+  <img src="screenshots/img_4.png" width="180" />
+  <img src="screenshots/img_1.png" width="180" />
+  <img src="screenshots/img_2.png" width="180" />
 </p>
 
 
