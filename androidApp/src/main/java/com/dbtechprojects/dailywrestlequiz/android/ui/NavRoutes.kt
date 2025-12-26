@@ -12,7 +12,7 @@ object NavRoutes {
      @Serializable data object TimeTrial: NavKey
      @Serializable data object Versus: NavKey
 
-     @Serializable data object VersusGame: NavKey
+     @Serializable data class VersusGame(val quizName: String): NavKey
      @Serializable data class TimeTrialGame(val timeTrialId: Int): NavKey
 
 }

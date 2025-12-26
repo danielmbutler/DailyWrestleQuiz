@@ -123,47 +123,19 @@ fun AppNavHost(
                 TimeTrialGameScreen(getTimeTrialGameViewModel(it.timeTrialId))
             }
             entry<NavRoutes.Versus> {
-                VersusListScreen(getVersusViewModel(null), navToVersusGame = {})
+                VersusListScreen(getVersusViewModel(null), navToVersusGame = {
+                    backStack.add(NavRoutes.VersusGame(it))
+                })
+            }
+            entry<NavRoutes.VersusGame> {
+                it
+                VersusScreen(getVersusViewModel(it.quizName), {
+                    while (backStack.size > 1) {
+                        backStack.removeLastOrNull()
+                    }
+                })
             }
         }
     )
-
-
-//
-//    composable(NavRoutes.VERSUS) {
-//
-//        VersusListScreen(
-//            getVersusViewModel(
-//                object : ArgPersistence<String?> {
-//                    override fun get(argName: String): String? {
-//                        return null
-//                    }
-//                }
-//            ),
-//            navToVersusGame = {
-//                navController.navigate("${NavRoutes.VERSUS_GAME}/$it")
-//            }
-//        )
-//        BackButton(navController)
-//    }
-//
-//    composable(
-//        route = "${NavRoutes.VERSUS_GAME}/{${VersusViewModel.ARG_QUIZ_NAME}}",
-//        arguments = listOf(
-//            navArgument(VersusViewModel.ARG_QUIZ_NAME) {
-//                type = NavType.StringType
-//            }
-//        )
-//    ) { entry ->
-//
-//        val args = ArgPersistenceImplementation<String?>(savedStateHandle = entry.savedStateHandle)
-//
-//        VersusScreen(getVersusViewModel(args), {
-//            navController.navigate(NavRoutes.HOME) {
-//                popUpTo(navController.graph.startDestinationId)
-//                launchSingleTop = true
-//            }
-//        })
-//    }
 }
 
