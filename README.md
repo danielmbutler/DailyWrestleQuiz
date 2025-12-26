@@ -37,6 +37,14 @@ Players can test their wrestling knowledge across eras, companies, and pay-per-v
 
 ---
 
+## 📸 Screenshots
+
+| Home / Daily Quiz | Versus Mode                                                 | Gameplay                                                    |
+|-------------------|-------------------------------------------------------------|-------------------------------------------------------------|
+| ![Daily Wrestle Trivia Screenshot 1](screenshots/img_1.png) | ![Daily Wrestle Trivia Screenshot 2](screenshots/img_2.png) | ![Daily Wrestle Trivia Screenshot 3](screenshots/img_3.png) |
+
+*A glimpse at the Daily Quiz flow, and in-game trivia experience.*
+
 ## 📱 Design
 
 The UI is designed to balance a **clean trivia experience** with the **energy of professional wrestling**:
