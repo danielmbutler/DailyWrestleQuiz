@@ -17,11 +17,13 @@ import kotlin.time.measureTime
 interface HomeViewModel {
     val streak: StateFlow<Int>
     val canAccessStreakMode: StateFlow<Boolean>
+
+    fun onCreate()
 }
 
 class HomeViewModelImpl(
-    syncManager: SyncManager,
-    settingsUseCase: SettingsUseCase
+    private val syncManager: SyncManager,
+    private val settingsUseCase: SettingsUseCase
 ) :
     BaseViewModel(), HomeViewModel {
     private val _streak = MutableStateFlow(0)
@@ -30,12 +32,13 @@ class HomeViewModelImpl(
     private val _canAccessStreakMode = MutableStateFlow(false)
     override val canAccessStreakMode get() = _canAccessStreakMode
 
-    init {
+    override fun onCreate() {
         viewModelScope.launch(Dispatchers.IO) {
             settingsUseCase.getSettings().collect {
                 if (it != null) {
                     _streak.value = it.streak
-                    _canAccessStreakMode.value = settingsUseCase.canAccessStreakMode(it.currentStreakLastAnsweredDate)
+                    _canAccessStreakMode.value =
+                        settingsUseCase.canAccessStreakMode(it.currentStreakLastAnsweredDate)
                 }
             }
         }
@@ -56,5 +59,7 @@ class HomeViewModelStub() : HomeViewModel {
         }
     override val canAccessStreakMode: StateFlow<Boolean>
         get() = MutableStateFlow(false)
+
+    override fun onCreate() {}
 
 }

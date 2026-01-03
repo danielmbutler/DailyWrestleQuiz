@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import java.nio.file.WatchEvent
 
 
 @Composable
@@ -112,20 +111,24 @@ fun QuestionTimerTypeTwo(
 
 }
 
-//@Composable
-//fun BackButton(pop: () -> Unit) {
-//    Box(modifier = Modifier.fillMaxWidth()) {
-//        Column(
-//            modifier = Modifier.padding(
-//                top = 36.dp,
-//                start = 24.dp,
-//                end = 24.dp,
-//                bottom = 12.dp).clickable{
-//                pop.invoke()
-//            }
-//        ) {
-//            PrimaryBodySmall("Back")
-//        }
-//    }
-//}
+@Composable
+fun BackButton(pop: () -> Unit, content: @Composable () -> Unit) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            content.invoke()
+            Column(
+                modifier = Modifier.padding(
+                    top = 36.dp,
+                    start = 24.dp,
+                    end = 24.dp,
+                    bottom = 12.dp).clickable{
+                    pop.invoke()
+                }
+            ) {
+                PrimaryBodyLarge("<")
+            }
+        }
+
+    }
+}
 

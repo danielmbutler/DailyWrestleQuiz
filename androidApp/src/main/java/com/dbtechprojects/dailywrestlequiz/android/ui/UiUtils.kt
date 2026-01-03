@@ -4,16 +4,25 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.data.model.VersusMode
 
 object UiUtils {
+
+    fun NavBackStack<NavKey>.popHome() {
+        while (size > 1) {
+            removeLastOrNull()
+        }
+    }
+
     fun hexToColor(hex: String): Color {
         val colorString = if (hex.startsWith("#")) hex else "#$hex"
         return Color(colorString.toColorInt())
     }
 
-    fun sendShareEvent(text: String, context: Context){
+    fun sendShareEvent(text: String, context: Context) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, text)
@@ -21,7 +30,7 @@ object UiUtils {
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
-         context.startActivity(shareIntent)
+        context.startActivity(shareIntent)
     }
 
     fun getVersusImageRes(versusName: String): Int {

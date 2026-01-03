@@ -17,10 +17,12 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.dbtechprojects.dailywrestlequiz.android.ui.NavRoutes
+import com.dbtechprojects.dailywrestlequiz.android.ui.UiUtils.popHome
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.WheelOfTriviaScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialGameScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusListScreen
@@ -87,23 +89,38 @@ fun AppNavHost(
                     onNavigateToVersus = {
                         backStack.add(NavRoutes.Versus)
                     },
-                    viewModel = getHomeViewModel()
+                    viewModel = getHomeViewModel().also {
+                        Log.d("HomeViewModel", "onCreate called")
+                        it.onCreate()
+                    }
                 )
             }
             entry<NavRoutes.WheelOfTrivia> {
-                WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = { id ->
-                    backStack.add(NavRoutes.Question(id, 1))
-                })
+                BackButton(
+                    pop = { backStack.popHome()}
+                ) {
+                    WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = { id ->
+                        backStack.add(NavRoutes.Question(id, 1))
+                    })
+                }
             }
             entry<NavRoutes.Quiz> {
-                QuizScreen(getQuizViewModel(), navigateToQuestion = { id ->
-                    backStack.add(NavRoutes.Question(id, 0))
-                })
+                BackButton(
+                    pop = { backStack.popHome()}
+                ) {
+                    QuizScreen(getQuizViewModel(), navigateToQuestion = { id ->
+                        backStack.add(NavRoutes.Question(id, 0))
+                    })
+                }
             }
             entry<NavRoutes.TimeTrial> {
-                TimeTrialListScreen(getTimeTrialListViewModel(), navigateToTimeTrial = {
-                    backStack.add(NavRoutes.TimeTrialGame(it))
-                })
+                BackButton(
+                    pop = { backStack.popHome()}
+                ) {
+                    TimeTrialListScreen(getTimeTrialListViewModel(), navigateToTimeTrial = {
+                        backStack.add(NavRoutes.TimeTrialGame(it))
+                    })
+                }
             }
             entry<NavRoutes.Question> {
                 val questionViewModel: QuestionViewModel = viewModel(
@@ -114,25 +131,25 @@ fun AppNavHost(
                 QuestionScreen(
                     questionViewModel
                 ) {
-                    while (backStack.size > 1) {
-                        backStack.removeLastOrNull()
-                    }
+                    backStack.popHome()
                 }
             }
             entry<NavRoutes.TimeTrialGame> {
                 TimeTrialGameScreen(getTimeTrialGameViewModel(it.timeTrialId))
             }
             entry<NavRoutes.Versus> {
-                VersusListScreen(getVersusViewModel(null), navToVersusGame = {
-                    backStack.add(NavRoutes.VersusGame(it))
-                })
+                BackButton(
+                    pop = { backStack.popHome()}
+                ) {
+                    VersusListScreen(getVersusViewModel(null), navToVersusGame = {
+                        backStack.add(NavRoutes.VersusGame(it))
+                    })
+                }
             }
             entry<NavRoutes.VersusGame> {
                 it
                 VersusScreen(getVersusViewModel(it.quizName), {
-                    while (backStack.size > 1) {
-                        backStack.removeLastOrNull()
-                    }
+                    backStack.popHome()
                 })
             }
         }
