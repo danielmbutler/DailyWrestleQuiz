@@ -54,6 +54,7 @@ fun HomeScreenPreviewFs1() {
                 onNavigateToTrivia = {},
                 onNavigateToVersus = {},
                 onNavigateToTimeTrial = {},
+                onNavigateToSettings = {},
                 viewModel = HomeViewModelStub()
             )
         }

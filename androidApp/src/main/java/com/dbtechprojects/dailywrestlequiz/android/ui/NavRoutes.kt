@@ -11,6 +11,7 @@ object NavRoutes {
      @Serializable data object WheelOfTrivia: NavKey
      @Serializable data object TimeTrial: NavKey
      @Serializable data object Versus: NavKey
+     @Serializable data object Settings: NavKey
 
      @Serializable data class VersusGame(val quizName: String): NavKey
      @Serializable data class TimeTrialGame(val timeTrialId: Int): NavKey

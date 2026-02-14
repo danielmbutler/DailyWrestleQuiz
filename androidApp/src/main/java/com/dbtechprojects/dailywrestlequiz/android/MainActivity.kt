@@ -27,20 +27,16 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialGameScr
 import com.dbtechprojects.dailywrestlequiz.android.ui.timetrial.TimeTrialListScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusListScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.versus.VersusScreen
-import com.dbtechprojects.dailywrestlequiz.android.viewmodel.HomeViewModelFactory
+import com.dbtechprojects.dailywrestlequiz.android.ui.settings.SettingsScreen
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.QuestionViewModelFactory
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getHomeViewModel
-import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getQuizViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialGameViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getTimeTrialListViewModel
 import com.dbtechprojects.dailywrestlequiz.android.viewmodel.getVersusViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelArgs
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialGameViewModel
-import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
-import java.util.Map.entry
-import java.util.UUID
+
 
 
 class MainActivity : ComponentActivity() {
@@ -89,11 +85,19 @@ fun AppNavHost(
                     onNavigateToVersus = {
                         backStack.add(NavRoutes.Versus)
                     },
+                    onNavigateToSettings = {
+                        backStack.add(NavRoutes.Settings)
+                    },
                     viewModel = getHomeViewModel().also {
                         Log.d("HomeViewModel", "onCreate called")
                         it.onCreate()
                     }
                 )
+            }
+            entry<NavRoutes.Settings> {
+                BackButton(pop = { backStack.popHome() }) {
+                    SettingsScreen()
+                }
             }
             entry<NavRoutes.WheelOfTrivia> {
                 BackButton(
@@ -155,4 +159,3 @@ fun AppNavHost(
         }
     )
 }
-

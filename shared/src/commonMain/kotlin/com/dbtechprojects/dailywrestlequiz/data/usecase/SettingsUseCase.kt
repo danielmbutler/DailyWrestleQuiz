@@ -18,24 +18,50 @@ interface SettingsUseCase{
 }
 class SettingsUseCaseImpl(
     private val settingsDao: SettingsDao,
-    private val timerUtils: TimerUtils) : SettingsUseCase{
+    private val timerUtils: TimerUtils,
+    private val notificationScheduler: com.dbtechprojects.dailywrestlequiz.notifications.NotificationScheduler) : SettingsUseCase{
 
     override fun getStreak(): Flow<Int> {
         return settingsDao.getSettingsFlow().map { settings -> settings?.streak ?: 0}
     }
 
     override fun canAccessStreakMode(currentStreakDate: String): Boolean {
-        val today = Clock.System.now()
+        val nowLocal = Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date // extract LocalDate
+
+        val today = nowLocal.date // extract LocalDate
+        val hour = nowLocal.hour
 
         println("Streak Today: $today")
 
-        val streakDt = timerUtils.getLocalDateTimeFromString(currentStreakDate) ?: return true
+        val streakDt = timerUtils.getLocalDateTimeFromString(currentStreakDate)
 
-        println("Streak date: $streakDt")
-        println("is today ${streakDt.date != today}")
-        return streakDt.date != today
+        // If we don't have a streak date stored, user hasn't attempted — schedule or post reminder.
+        if (streakDt == null) {
+            if (hour < 12) {
+                notificationScheduler.scheduleMiddayReminder()
+            } else {
+                // Past midday and no attempt today — post immediately
+                notificationScheduler.postImmediateReminder()
+            }
+            return true
+        }
+
+        val isToday = streakDt.date == today
+
+        // If user has not attempted today, ensure a reminder is scheduled (or posted if past midday)
+        if (!isToday) {
+            if (hour < 12) {
+                notificationScheduler.scheduleMiddayReminder()
+            } else {
+                notificationScheduler.postImmediateReminder()
+            }
+        } else {
+            // user already attempted today -> cancel any scheduled reminder
+            notificationScheduler.cancelMiddayReminder()
+        }
+
+        return !isToday
     }
 
     override suspend fun getSettings(): Flow<Settings?> {

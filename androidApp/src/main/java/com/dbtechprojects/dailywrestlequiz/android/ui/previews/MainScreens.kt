@@ -34,6 +34,7 @@ fun HomeScreenPreview() {
                 onNavigateToTrivia = {},
                 onNavigateToVersus = {},
                 onNavigateToTimeTrial = {},
+                onNavigateToSettings = {},
                 viewModel = HomeViewModelStub()
             )
         }
@@ -101,6 +102,7 @@ fun HomeScreenPreviewDark() {
                 onNavigateToTrivia = {},
                 onNavigateToVersus = {},
                 onNavigateToTimeTrial = {},
+                onNavigateToSettings = {},
                 viewModel = HomeViewModelStub()
             )
         }

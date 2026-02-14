@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -45,6 +42,7 @@ fun HomeScreen(
     onNavigateToTrivia: () -> Unit,
     onNavigateToTimeTrial: () -> Unit,
     onNavigateToVersus: () -> Unit,
+    onNavigateToSettings: () -> Unit,
 ) {
     val streak by viewModel.streak.collectAsState()
     val canAccessStreakMode by viewModel.canAccessStreakMode.collectAsState()
@@ -56,11 +54,26 @@ fun HomeScreen(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // Title row with settings icon on the top-right
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, end = 12.dp),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onNavigateToSettings) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_settings),
+                    contentDescription = stringResource(R.string.settings)
+                )
+            }
+        }
         AppTitle()
-        if (showDialog.value){
+        if (showDialog.value) {
             RoundedSmallDialog(
-                closeDialog = {showDialog.value = false},
-                action = {showDialog.value = false},
+                closeDialog = { showDialog.value = false },
+                action = { showDialog.value = false },
                 title = stringResource(R.string.you_already_played_today)
             )
         }
@@ -79,8 +92,6 @@ fun HomeScreen(
         )
     }
 }
-
-
 
 @Composable
 fun AppTitle() {
@@ -111,7 +122,6 @@ fun HomeCallToAction(onClick: () -> Unit) {
             )
         }
     }
-
 }
 
 @Composable
@@ -134,7 +144,6 @@ fun StreakSection(streak: Int) {
             )
         }
     }
-
 }
 
 @Composable
@@ -151,19 +160,19 @@ fun Options(
             drawable = R.drawable.gamepad,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.trivia_mode),
-            onClick = {onNavigateToTrivia.invoke()}
+            onClick = { onNavigateToTrivia.invoke() }
         )
         ImageRow(
             drawable = R.drawable.timer,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.time_trials_mode),
-            onClick = {onNavigateToTimeTrial.invoke()}
+            onClick = { onNavigateToTimeTrial.invoke() }
         )
         ImageRow(
             drawable = R.drawable.group,
             color = MaterialTheme.colorScheme.surface,
             label = stringResource(R.string.versus_mode),
-            onClick = {onNavigateToVersus.invoke()}
+            onClick = { onNavigateToVersus.invoke() }
         )
     }
 

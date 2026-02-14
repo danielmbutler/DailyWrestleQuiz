@@ -53,7 +53,8 @@ object AppModule {
         single { SyncManager(get(), get()) }  // Koin injects QuestionDao automatically here
         single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get(), get()) }
         single<TimeTrialUseCase> { TimeTrialUseCaseImpl(get(), get()) }
-        single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get()) }
+        // SettingsUseCaseImpl now requires NotificationScheduler in addition to SettingsDao and TimerUtils
+        single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get(), get()) }
         single<QuizUseCase> { QuizUseCaseImpl(get()) }
         single<VersusModeUseCase>{ VersusModeUseCaseImpl(get()) }
         single<HomeViewModel> { HomeViewModelImpl(get(), get()) }
