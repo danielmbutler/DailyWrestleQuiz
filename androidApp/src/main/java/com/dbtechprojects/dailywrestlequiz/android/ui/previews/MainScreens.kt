@@ -11,6 +11,8 @@ import com.dbtechprojects.dailywrestlequiz.android.MyApplicationTheme
 import com.dbtechprojects.dailywrestlequiz.android.ui.home.HomeScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.settings.SettingsScreen
+import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelStub
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelStub
@@ -148,6 +150,28 @@ fun QuestionScreenPreviewDark() {
                 QuestionViewModelImpl.stub(),
                 {}
             )
+        }
+    }
+}
+
+@Preview(name = "Settings - Light", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
+@Composable
+fun SettingsScreenPreviewLight() {
+    MyApplicationTheme() {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            BackButton({}) {
+                SettingsScreen()
+            }
+        }
+    }
+}
+
+@Preview(name = "Settings - Dark", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+fun SettingsScreenPreviewDark() {
+    MyApplicationTheme() {
+        BackButton({}) {
+            SettingsScreen()
         }
     }
 }
