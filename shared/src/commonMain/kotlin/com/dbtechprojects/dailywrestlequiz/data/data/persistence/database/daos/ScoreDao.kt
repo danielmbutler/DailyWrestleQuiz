@@ -31,5 +31,12 @@ interface ScoreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertScore(score: TimeTrialScore)
 
+    // Delete all scores (regular quiz scores)
+    @Query("DELETE FROM Score")
+    suspend fun clearAllScores()
+
+    // Delete all time-trial scores
+    @Query("DELETE FROM TimeTrialScore")
+    suspend fun clearAllTimeTrialScores()
 
 }

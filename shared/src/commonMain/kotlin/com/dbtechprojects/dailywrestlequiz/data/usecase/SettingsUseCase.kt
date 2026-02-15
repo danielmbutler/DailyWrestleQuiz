@@ -1,5 +1,7 @@
 package com.dbtechprojects.dailywrestlequiz.data.usecase
 
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.QuestionDao
+import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.ScoreDao
 import com.dbtechprojects.dailywrestlequiz.data.data.persistence.database.daos.SettingsDao
 import com.dbtechprojects.dailywrestlequiz.data.model.Settings
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +17,16 @@ interface SettingsUseCase{
     fun canAccessStreakMode(currentStreakDate: String) : Boolean
 
     suspend fun getSettings(): Flow<Settings?>
+
+    suspend fun clearData()
 }
 class SettingsUseCaseImpl(
     private val settingsDao: SettingsDao,
     private val timerUtils: TimerUtils,
-    private val notificationScheduler: com.dbtechprojects.dailywrestlequiz.notifications.NotificationScheduler) : SettingsUseCase{
+    private val notificationScheduler: com.dbtechprojects.dailywrestlequiz.notifications.NotificationScheduler,
+    private val scoreDao: ScoreDao,
+    private val questionDao: QuestionDao
+) : SettingsUseCase{
 
     override fun getStreak(): Flow<Int> {
         return settingsDao.getSettingsFlow().map { settings -> settings?.streak ?: 0}
@@ -66,6 +73,14 @@ class SettingsUseCaseImpl(
 
     override suspend fun getSettings(): Flow<Settings?> {
         return settingsDao.getSettingsFlow()
+    }
+
+    override suspend fun clearData() {
+        // Clear settings, scores and reset question counters
+        settingsDao.clearAllSettings()
+        scoreDao.clearAllScores()
+        scoreDao.clearAllTimeTrialScores()
+        questionDao.resetAllTimesAnswered()
     }
 
 }

@@ -27,4 +27,7 @@ interface SettingsDao {
             " currentStreakLastAnsweredDate = datetime('now', 'localtime'), streakStartDate = ''"+
             "WHERE id = 1")
     suspend fun endStreak()
+
+    @Query("DELETE FROM settings")
+    suspend fun clearAllSettings()
 }

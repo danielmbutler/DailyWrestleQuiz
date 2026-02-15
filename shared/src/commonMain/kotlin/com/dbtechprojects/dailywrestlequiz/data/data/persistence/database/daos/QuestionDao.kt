@@ -38,4 +38,7 @@ interface QuestionDao {
     @RawQuery
     suspend fun getQuestionsRaw(query: RoomRawQuery): List<Question>
 
+    @Query("UPDATE Question SET timesAnswered = 0")
+    suspend fun resetAllTimesAnswered()
+
 }
