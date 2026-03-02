@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SettingsDao {
 
-    @Query("SELECT * FROM settings LIMIT 1")
+    @Query("SELECT * FROM Settings LIMIT 1")
     fun getSettingsFlow(): Flow<Settings?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -28,6 +28,6 @@ interface SettingsDao {
             "WHERE id = 1")
     suspend fun endStreak()
 
-    @Query("DELETE FROM settings")
+    @Query("DELETE FROM Settings")
     suspend fun clearAllSettings()
 }

@@ -19,6 +19,8 @@ interface HomeViewModel {
     val canAccessStreakMode: StateFlow<Boolean>
 
     fun onCreate()
+
+    fun clearData()
 }
 
 class HomeViewModelImpl(
@@ -29,18 +31,22 @@ class HomeViewModelImpl(
     private val _streak = MutableStateFlow(0)
     override val streak get() = _streak
 
-    private val _canAccessStreakMode = MutableStateFlow(false)
+    private val _canAccessStreakMode = MutableStateFlow(true)
     override val canAccessStreakMode get() = _canAccessStreakMode
+
+    private suspend fun setupSettings() {
+        settingsUseCase.getSettings().collect {
+            if (it != null) {
+                _streak.value = it.streak
+                _canAccessStreakMode.value =
+                    settingsUseCase.canAccessStreakMode(it.currentStreakLastAnsweredDate)
+            }
+        }
+    }
 
     override fun onCreate() {
         viewModelScope.launch(Dispatchers.IO) {
-            settingsUseCase.getSettings().collect {
-                if (it != null) {
-                    _streak.value = it.streak
-                    _canAccessStreakMode.value =
-                        settingsUseCase.canAccessStreakMode(it.currentStreakLastAnsweredDate)
-                }
-            }
+            setupSettings()
         }
         viewModelScope.launch(Dispatchers.IO) {
             measureTime {
@@ -48,6 +54,14 @@ class HomeViewModelImpl(
             }.also {
                 println("sync time $it")
             }
+        }
+    }
+
+    override fun clearData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            settingsUseCase.clearData()
+            _canAccessStreakMode.value = true
+            _streak.value = 0
         }
     }
 }
@@ -61,5 +75,7 @@ class HomeViewModelStub() : HomeViewModel {
         get() = MutableStateFlow(false)
 
     override fun onCreate() {}
+    override fun clearData() {}
+
 
 }

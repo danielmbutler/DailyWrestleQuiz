@@ -2,7 +2,6 @@
 
 package com.dbtechprojects.dailywrestlequiz.android.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

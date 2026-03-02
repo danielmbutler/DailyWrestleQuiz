@@ -36,7 +36,6 @@ import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelArgs
 
 
-
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +59,7 @@ fun AppNavHost(
 
 ) {
     val backStack = rememberNavBackStack(NavRoutes.Home)
+    val homeViewModel = getHomeViewModel()
     NavDisplay(
         backStack = backStack,
         entryDecorators = listOf(
@@ -86,7 +86,7 @@ fun AppNavHost(
                     onNavigateToSettings = {
                         backStack.add(NavRoutes.Settings)
                     },
-                    viewModel = getHomeViewModel().also {
+                    viewModel = homeViewModel.also {
                         Log.d("HomeViewModel", "onCreate called")
                         it.onCreate()
                     }
@@ -94,12 +94,12 @@ fun AppNavHost(
             }
             entry<NavRoutes.Settings> {
                 BackButton(pop = { backStack.popHome() }) {
-                    SettingsScreen()
+                    SettingsScreen { homeViewModel.clearData() }
                 }
             }
             entry<NavRoutes.WheelOfTrivia> {
                 BackButton(
-                    pop = { backStack.popHome()}
+                    pop = { backStack.popHome() }
                 ) {
                     WheelOfTriviaScreen(getQuizViewModel(), navigateToQuestion = { id ->
                         backStack.add(NavRoutes.Question(id, 1))
@@ -108,7 +108,7 @@ fun AppNavHost(
             }
             entry<NavRoutes.Quiz> {
                 BackButton(
-                    pop = { backStack.popHome()}
+                    pop = { backStack.popHome() }
                 ) {
                     QuizScreen(getQuizViewModel(), navigateToQuestion = { id ->
                         backStack.add(NavRoutes.Question(id, 0))
@@ -117,7 +117,7 @@ fun AppNavHost(
             }
             entry<NavRoutes.TimeTrial> {
                 BackButton(
-                    pop = { backStack.popHome()}
+                    pop = { backStack.popHome() }
                 ) {
                     TimeTrialListScreen(getTimeTrialListViewModel(), navigateToTimeTrial = {
                         backStack.add(NavRoutes.TimeTrialGame(it))
@@ -141,7 +141,7 @@ fun AppNavHost(
             }
             entry<NavRoutes.Versus> {
                 BackButton(
-                    pop = { backStack.popHome()}
+                    pop = { backStack.popHome() }
                 ) {
                     VersusListScreen(getVersusViewModel(null), navToVersusGame = {
                         backStack.add(NavRoutes.VersusGame(it))

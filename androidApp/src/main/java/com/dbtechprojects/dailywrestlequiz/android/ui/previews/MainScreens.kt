@@ -160,7 +160,7 @@ fun SettingsScreenPreviewLight() {
     MyApplicationTheme() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             BackButton({}) {
-                SettingsScreen()
+                SettingsScreen({})
             }
         }
     }
@@ -171,7 +171,7 @@ fun SettingsScreenPreviewLight() {
 fun SettingsScreenPreviewDark() {
     MyApplicationTheme() {
         BackButton({}) {
-            SettingsScreen()
+            SettingsScreen({})
         }
     }
 }

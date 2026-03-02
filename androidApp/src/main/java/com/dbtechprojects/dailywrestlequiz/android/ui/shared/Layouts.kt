@@ -172,7 +172,7 @@ fun RoundedSmallDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoundedSmallDialog(
+fun RoundedSmallDialogTwoOption(
     closeDialog: () -> Unit,
     onConfirm: () -> Unit,
     title: String,
