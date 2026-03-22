@@ -9,4 +9,9 @@ class TestUnitTest {
     fun addition_isCorrect() {
         (2+2) shouldBe 4
     }
+
+    @Test
+    fun subtraction_isCorrect() {
+        (2-2) shouldBe 0
+    }
 }
