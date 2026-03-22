@@ -14,4 +14,14 @@ class TestUnitTest {
     fun subtraction_isCorrect() {
         (2-2) shouldBe 0
     }
+
+    @Test
+    fun division_isCorrect() {
+        (25/5) shouldBe 5
+    }
+
+    @Test
+    fun multiplication_isCorrect() {
+        (25*4) shouldBe 100
+    }
 }
