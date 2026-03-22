@@ -19,4 +19,9 @@ class TestUnitTest {
     fun division_isCorrect() {
         (25/5) shouldBe 5
     }
+
+    @Test
+    fun multiplication_isCorrect() {
+        (25*4) shouldBe 100
+    }
 }
