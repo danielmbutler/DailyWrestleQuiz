@@ -6,6 +6,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version libs.versions.kotlin.get()
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 kotlin {
     androidTarget()
 
@@ -41,6 +47,9 @@ kotlin {
             implementation(libs.kotlin.test)
         }
     }
+
+    jvmToolchain(17)
+
 }
 
 android {

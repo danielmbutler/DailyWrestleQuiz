@@ -5,6 +5,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version libs.versions.kotlin.get() // ✅ Add this
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
 android {
     namespace = "com.dbtechprojects.dailywrestlequiz.android"
     compileSdk = 36
@@ -36,10 +42,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        jvmToolchain(17)
-    }
-
 }
 
 dependencies {
@@ -52,6 +54,11 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotest.assertions)
+
 
     // If using the ViewModel add-on library
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

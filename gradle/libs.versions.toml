@@ -12,6 +12,9 @@ room = "2.7.2" # latest KMP-supported version
 ksp = "2.0.0-1.0.24"
 nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0-rc01"
+junit = "4.13.2"
+mockk = "1.13.10"
+kotest = "5.9.0"
 
 
 
@@ -36,6 +39,11 @@ room-common = { module = "androidx.room:room-common", version.ref = "room" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 
 
 
