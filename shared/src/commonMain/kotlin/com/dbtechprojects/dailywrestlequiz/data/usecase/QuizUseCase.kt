@@ -30,6 +30,6 @@ class QuizUseCaseStub: QuizUseCase {
     }
 
     override fun getQuiz(id: Int): Quiz? {
-       return null
+       return Quiz.getQuiz().find { it.id == id }
     }
 }

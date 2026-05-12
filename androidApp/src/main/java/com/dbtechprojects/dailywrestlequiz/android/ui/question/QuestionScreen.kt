@@ -98,7 +98,7 @@ fun QuestionScreen(
                     score = currentScore,
                     streak = streak,
                     onNavigateHome = navHome,
-                    customEndMessage = customEndMessage
+                    customEndMessage = customEndMessage,
                 )
             }
 
@@ -190,7 +190,7 @@ fun EndScreen(
     quizName: String, score: Int,
     onNavigateHome: () -> Unit,
     customEndMessage: String?,
-    streak: Int
+    streak: Int,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

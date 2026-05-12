@@ -57,7 +57,9 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 24
-        buildConfigField("String", "ENCRYPTION_KEY", "\"${project.findProperty("encryption_key") ?: ""}\"")
+        val encryptionKey = project.findProperty("encryption_key")
+            ?: throw GradleException("encryption_key not found in gradle.properties")
+        buildConfigField("String", "ENCRYPTION_KEY", "\"${encryptionKey}\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

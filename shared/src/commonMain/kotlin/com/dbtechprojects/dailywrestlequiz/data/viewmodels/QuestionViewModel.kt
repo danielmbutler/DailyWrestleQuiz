@@ -135,6 +135,7 @@ class QuestionViewModelImpl(
             } else {
                 var text = "Congratulations!"
                 text += "\n Your Streak is now ${questionsUseCase.getStreak()} Days !"
+                text += "\n Started on ${questionsUseCase.getStreakStartDate()}"
                 text
             }
 
@@ -267,7 +268,7 @@ class QuestionViewModelImpl(
         fun stub(): QuestionViewModel {
             return QuestionViewModelImpl(
                 questionsUseCase = QuestionUseCaseStub(),
-                args = QuestionViewModelArgs(0, 0),
+                args = QuestionViewModelArgs(1, 1),
                 timerUtils = TimerUtils(),
                 quizUseCase = QuizUseCaseStub(),
             )
