@@ -52,20 +52,20 @@ fun SettingsScreen(
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
         ) {
-            Text(text = "Privacy Policy", style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.privacy_policy), style = MaterialTheme.typography.bodyLarge)
         }
 
         Button(
             onClick = { showClearDataDialog = true },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Clear Data", style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.clear_data), style = MaterialTheme.typography.bodyLarge)
         }
     }
     if (dataCleared){
         Toast.makeText(
             LocalContext.current,
-            "All data cleared",
+            stringResource(R.string.all_data_cleared),
             Toast.LENGTH_SHORT
         ).show()
     }

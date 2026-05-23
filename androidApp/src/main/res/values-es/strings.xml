@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Quiz Diario de Lucha Libre</string>
+
+    <!-- Home Screen -->
+    <string name="home_todays_match">Combate de Hoy</string>
+    <string name="home_title">Quiz Diario de\nLucha Libre</string>
+    <string name="home_match_description">Responde preguntas de trivia de lucha libre</string>
+    <string name="home_start_button">INICIAR</string>
+    <string name="home_streak_text">%1$d días de racha</string>
+    <string name="since">Desde %1$s</string>
+
+    <!-- Modes -->
+    <string name="trivia_mode">Modo Trivia</string>
+    <string name="time_trials_mode">Modo Contrarreloj</string>
+    <string name="versus_mode">Modo Versus</string>
+
+    <!-- Quiz Screen -->
+    <string name="question_counter">%1$d/%2$d</string>
+    <string name="quiz_title">@string/app_name</string>
+    <string name="question_timer">%1$s</string>
+    <string name="question_answer_correct">¡Correcto!</string>
+    <string name="question_answer_incorrect">¡Incorrecto!</string>
+    <string name="question_answer_out_of_time">¡Fuera de tiempo!</string>
+    <string name="next">Siguiente</string>
+
+    <!-- Time Trials Screen -->
+    <string name="time_trials_title">Contrarreloj</string>
+
+    <string name="unlock_premium">DESBLOQUEAR PREMIUM</string>
+    <string name="current_streak">Racha actual</string>
+    <string name="current_score">"Puntuación actual: "</string>
+    <string name="wrestling_trivia">Trivia de lucha libre</string>
+    <string name="wheel_of_trivia">Rueda de trivia</string>
+    <string name="spin">Girar</string>
+    <string name="spinning">Girando</string>
+    <string name="how_fast_can_you_answer">¿Qué tan rápido puedes responder?</string>
+    <string name="name_all">Nombra todos</string>
+    <string name="step_into_the_ring_of_knowledge">Entra al ring del conocimiento</string>
+    <string name="found">Encontrado</string>
+    <string name="wrestler_name">Nombre del luchador</string>
+    <string name="show_entries">Mostrar entradas</string>
+    <string name="congratulations">¡Felicidades!</string>
+    <string name="better_luck_next_time">¡Mejor suerte la próxima vez!</string>
+    <string name="share_result">Compartir resultado</string>
+    <string name="try_again">Intentar de nuevo</string>
+    <string name="home">Inicio</string>
+    <string name="checklist">Lista de verificación</string>
+    <string name="entries">Entradas</string>
+    <string name="you_already_played_today">¡Ya jugaste hoy!</string>
+    <string name="close">Cerrar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="high_score">Puntuación más alta</string>
+    <string name="fastest_Time">Tiempo más rápido</string>
+    <string name="can_you_beat_our_champions">¿Puedes vencer a nuestros campeones?</string>
+    <string name="settings">Configuración</string>
+    <string name="your_score">Tu puntuación: %1$d</string>
+    <string name="privacy_policy">Política de Privacidad</string>
+    <string name="clear_data">Borrar datos</string>
+    <string name="all_data_cleared">Todos los datos han sido borrados</string>
+    <string name="are_you_sure_you_want_to_clear_all_data">¿Estás seguro de que quieres borrar todos los datos?</string>
+</resources>

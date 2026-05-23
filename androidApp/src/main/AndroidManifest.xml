@@ -23,19 +23,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Receiver to post midday reminder -->
-        <receiver android:name="com.dbtechprojects.dailywrestlequiz.notifications.MiddayReminderReceiver" android:exported="false">
-            <intent-filter>
-                <action android:name="com.dbtechprojects.dailywrestlequiz.MIDDAY_ALARM" />
-            </intent-filter>
-        </receiver>
+<!--        &lt;!&ndash; Receiver to post midday reminder &ndash;&gt;-->
+<!--        <receiver android:name="com.dbtechprojects.dailywrestlequiz.notifications.MiddayReminderReceiver" android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.dbtechprojects.dailywrestlequiz.MIDDAY_ALARM" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
-        <!-- Receiver to reschedule alarms after device boot -->
-        <receiver android:name="com.dbtechprojects.dailywrestlequiz.notifications.BootReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+<!--        &lt;!&ndash; Receiver to reschedule alarms after device boot &ndash;&gt;-->
+<!--        <receiver android:name="com.dbtechprojects.dailywrestlequiz.notifications.BootReceiver" android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
     </application>
 </manifest>

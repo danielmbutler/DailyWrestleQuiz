@@ -16,7 +16,7 @@ class DailyWrestlingTrivia : Application() {
         startKoin {
             androidLogger()
             androidContext(this@DailyWrestlingTrivia)
-            modules(listOf(androidModule, databaseModule, appModule, notificationModule)) // your other modules
+            modules(listOf(androidModule, databaseModule, appModule)) // your other modules
         }
     }
 }

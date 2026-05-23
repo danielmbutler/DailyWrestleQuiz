@@ -31,6 +31,7 @@ import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewMode
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.TimeTrialListViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModel
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.VersusViewModelImpl
+import com.dbtechprojects.dailywrestlequiz.notifications.StubNotificationScheduler
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -54,7 +55,7 @@ object AppModule {
         single<QuestionsUseCase> { QuestionsUseCaseImpl(get(), get(), get()) }
         single<TimeTrialUseCase> { TimeTrialUseCaseImpl(get(), get()) }
         // SettingsUseCaseImpl now requires NotificationScheduler in addition to SettingsDao and TimerUtils
-        single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get(), get(), get(), get()) }
+        single<SettingsUseCase>{ SettingsUseCaseImpl(get(), get(), StubNotificationScheduler, get(), get()) }
         single<QuizUseCase> { QuizUseCaseImpl(get()) }
         single<VersusModeUseCase>{ VersusModeUseCaseImpl(get()) }
         single<HomeViewModel> { HomeViewModelImpl(get(), get()) }

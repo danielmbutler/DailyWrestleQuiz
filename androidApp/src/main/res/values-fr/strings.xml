@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Name -->
+    <string name="app_name">Quiz Quotidien de Lutte</string>
+
+    <!-- Home Screen -->
+    <string name="home_todays_match">Match du jour</string>
+    <string name="home_title">Quiz Quotidien de\nLutte</string>
+    <string name="home_match_description">Répondez à des questions de culture générale sur la lutte</string>
+    <string name="home_start_button">DÉMARRER</string>
+    <string name="home_streak_text">%1$d jours d\'affilée</string>
+    <string name="since">Depuis %1$s</string>
+
+    <!-- Modes -->
+    <string name="trivia_mode">Mode Quiz</string>
+    <string name="time_trials_mode">Mode Contre-la-montre</string>
+    <string name="versus_mode">Mode Versus</string>
+
+    <!-- Quiz Screen -->
+    <string name="question_counter">%1$d/%2$d</string>
+    <string name="quiz_title">@string/app_name</string>
+    <string name="question_timer">%1$s</string>
+    <string name="question_answer_correct">Correct !</string>
+    <string name="question_answer_incorrect">Incorrect !</string>
+    <string name="question_answer_out_of_time">Temps écoulé !</string>
+    <string name="next">Suivant</string>
+
+    <!-- Time Trials Screen -->
+    <string name="time_trials_title">Contre-la-montre</string>
+
+    <string name="unlock_premium">DÉVERROUILLER PREMIUM</string>
+    <string name="current_streak">Série actuelle</string>
+    <string name="current_score">"Score actuel : "</string>
+    <string name="wrestling_trivia">Quiz de lutte</string>
+    <string name="wheel_of_trivia">Roue du quiz</string>
+    <string name="spin">Tourner</string>
+    <string name="spinning">En rotation</string>
+    <string name="how_fast_can_you_answer">À quelle vitesse pouvez-vous répondre ?</string>
+    <string name="name_all">Tout nommer</string>
+    <string name="step_into_the_ring_of_knowledge">Entrez dans le ring du savoir</string>
+    <string name="found">Trouvé</string>
+    <string name="wrestler_name">Nom du catcheur</string>
+    <string name="show_entries">Afficher les entrées</string>
+    <string name="congratulations">Félicitations !</string>
+    <string name="better_luck_next_time">Bonne chance la prochaine fois !</string>
+    <string name="share_result">Partager le résultat</string>
+    <string name="try_again">Réessayer</string>
+    <string name="home">Accueil</string>
+    <string name="checklist">Liste de contrôle</string>
+    <string name="entries">Entrées</string>
+    <string name="you_already_played_today">Vous avez déjà joué aujourd\'hui !</string>
+    <string name="close">Fermer</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="high_score">Meilleur score</string>
+    <string name="fastest_Time">Temps le plus rapide</string>
+    <string name="can_you_beat_our_champions">Pouvez-vous battre nos champions ?</string>
+    <string name="settings">Paramètres</string>
+    <string name="are_you_sure_you_want_to_clear_all_data">Êtes-vous sûr de vouloir supprimer toutes les données ?</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="clear_data">Effacer les données</string>
+    <string name="all_data_cleared">Toutes les données ont été effacées</string>
+    <!-- Score -->
+    <string name="your_score">Votre score : %1$d</string>
+
+</resources>

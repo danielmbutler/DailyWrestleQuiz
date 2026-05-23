@@ -57,5 +57,9 @@
     <string name="fastest_Time">Fastest time</string>
     <string name="can_you_beat_our_champions">Can you beat our Champions?</string>
     <string name="settings">Settings</string>
+    <string name="your_score">Your Score: %1$d</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="all_data_cleared">All data cleared</string>
     <string name="are_you_sure_you_want_to_clear_all_data">Are you sure you want to clear all data?</string>
 </resources>
