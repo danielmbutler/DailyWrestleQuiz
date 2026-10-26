@@ -7,6 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,4 +24,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run unit tests
-        run: ./gradlew :androidApp:testDebugUnitTest --rerun-tasks
+        run: ./gradlew -Pencryption_key="${ENCRYPTION_KEY}" :androidApp:testDebugUnitTest --rerun-tasks
