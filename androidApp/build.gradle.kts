@@ -30,6 +30,7 @@ android {
     namespace = "com.dbtechprojects.dailywrestlequiz.android"
     compileSdk = 36
     defaultConfig {
+        buildFeatures.buildConfig = true
         applicationId = "com.dbtechprojects.dailywrestlequiz.android"
         minSdk = 26
         targetSdk = 36
