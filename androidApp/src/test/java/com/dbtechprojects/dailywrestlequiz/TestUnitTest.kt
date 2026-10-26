@@ -14,6 +14,10 @@ class TestUnitTest {
     fun subtraction_isCorrect() {
         (2-2) shouldBe 0
     }
+    @Test
+    fun subtraction_isCorrect_1() {
+        (2-2) shouldBe 0
+    }
 
     @Test
     fun division_isCorrect() {
