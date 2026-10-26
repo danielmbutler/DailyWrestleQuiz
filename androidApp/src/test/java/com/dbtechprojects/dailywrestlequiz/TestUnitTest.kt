@@ -16,7 +16,7 @@ class TestUnitTest {
     }
     @Test
     fun subtraction_isCorrect_1() {
-        (2-2) shouldBe 0
+        (2-2) shouldBe 1
     }
 
     @Test
