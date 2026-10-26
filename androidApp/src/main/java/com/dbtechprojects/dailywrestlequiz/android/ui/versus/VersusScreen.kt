@@ -201,7 +201,9 @@ fun ScoreSection(
                     .size(64.dp)
                     .clip(CircleShape)
             )
-            PrimaryBodyMedium("Your Score: " + "${currentScore} ")
+            PrimaryBodyMedium(
+                stringResource(R.string.your_score, currentScore)
+            )
         }
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Image(

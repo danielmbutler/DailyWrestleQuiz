@@ -1,11 +1,13 @@
 package com.dbtechprojects.dailywrestlequiz.android.ui.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +24,7 @@ import com.dbtechprojects.dailywrestlequiz.android.R
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.RoundedSmallDialogTwoOption
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.ScreenCenterTitle
 
+
 @Composable
 fun SettingsScreen(
     onClearDataPress: () -> Unit
@@ -29,6 +32,10 @@ fun SettingsScreen(
     var showPrivacy by remember { mutableStateOf(false) }
     var showClearDataDialog by remember { mutableStateOf(false) }
     var dataCleared by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://dailywrestlingtrivia.s3.eu-west-2.amazonaws.com/privacy_policy.html")) }
+
 
     Column(modifier = Modifier.padding(16.dp)) {
         // Title
@@ -38,25 +45,27 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = { showPrivacy = true },
+            onClick = {
+                context.startActivity(intent)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
         ) {
-            Text(text = "Privacy Policy", style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.privacy_policy), style = MaterialTheme.typography.bodyLarge)
         }
 
         Button(
             onClick = { showClearDataDialog = true },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Clear Data", style = MaterialTheme.typography.bodyLarge)
+            Text(text = stringResource(R.string.clear_data), style = MaterialTheme.typography.bodyLarge)
         }
     }
     if (dataCleared){
         Toast.makeText(
             LocalContext.current,
-            "All data cleared",
+            stringResource(R.string.all_data_cleared),
             Toast.LENGTH_SHORT
         ).show()
     }

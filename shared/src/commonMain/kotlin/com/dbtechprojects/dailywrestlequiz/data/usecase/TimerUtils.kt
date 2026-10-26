@@ -5,6 +5,27 @@ import kotlinx.datetime.format.DateTimeFormat
 
 class TimerUtils {
 
+    fun formatDate(input: String): String {
+        val parts = input.split("-")
+        try {
+            val year = parts[0]
+            val month = parts[1].toInt()
+            val day = parts[2]
+
+            val months = arrayOf(
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            )
+
+            val monthName = months[month - 1]
+
+            return "$day $monthName $year"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return input
+        }
+    }
+
     fun getTimeRemainingText(timeElapsed: Int, totalTime: Int): String {
         val timeRemaining = totalTime - timeElapsed
         val minutes = timeRemaining / 60
@@ -41,7 +62,7 @@ class TimerUtils {
     fun getLocalDateTimeFromString(dateString: String): LocalDateTime? {
         return try {
             LocalDateTime.parse(dateString.replace(" ", "T"))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }

@@ -12,6 +12,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            // Read signing properties from the Gradle properties (gradle.properties) instead of hardcoding.
+            // Use nullable lookups so the build doesn't fail if properties are missing during local dev.
+            val storeFileProp: String? = project.findProperty("SIGNING_STORE_FILE") as? String
+            val keyAliasProp: String? = project.findProperty("SIGNING_KEY_ALIAS") as? String
+            val storePasswordProp: String? = project.findProperty("SIGNING_STORE_PASSWORD") as? String
+            val keyPasswordProp: String? = project.findProperty("SIGNING_KEY_PASSWORD") as? String
+
+            storeFile = storeFileProp?.let { file(it) }
+            keyAlias = keyAliasProp ?: "key0"
+            storePassword = storePasswordProp ?: ""
+            keyPassword = keyPasswordProp ?: ""
+        }
+    }
     namespace = "com.dbtechprojects.dailywrestlequiz.android"
     compileSdk = 36
     defaultConfig {
@@ -33,9 +48,16 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")
         }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

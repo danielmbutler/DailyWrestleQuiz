@@ -13,11 +13,27 @@ import com.dbtechprojects.dailywrestlequiz.android.ui.question.QuestionScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.quiz.QuizScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.settings.SettingsScreen
 import com.dbtechprojects.dailywrestlequiz.android.ui.shared.BackButton
+import com.dbtechprojects.dailywrestlequiz.data.model.Quiz
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.HomeViewModelStub
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuestionViewModelImpl
 import com.dbtechprojects.dailywrestlequiz.data.viewmodels.QuizViewModelStub
 
 
+
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
 @Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
@@ -43,6 +59,21 @@ fun HomeScreenPreview() {
     }
 }
 
+
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
 @Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
@@ -58,12 +89,27 @@ fun QuizScreenPreview() {
         ) {
 
             QuizScreen(
-                QuizViewModelStub(), {}
+                QuizViewModelStub(
+                    Quiz.getQuiz()
+                ), {}
             )
         }
     }
 }
-
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showBackground = true
+)
 @Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
@@ -86,6 +132,20 @@ fun QuestionScreenPreview() {
     }
 }
 
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
 @Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
@@ -112,6 +172,20 @@ fun HomeScreenPreviewDark() {
 }
 
 @Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
@@ -126,12 +200,28 @@ fun QuizScreenPreviewDark() {
         ) {
 
             QuizScreen(
-                QuizViewModelStub(), {}
+                QuizViewModelStub(
+                    Quiz.getQuiz()
+                ), {}
             )
         }
     }
 }
 
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
 @Preview(
     name = "Home - Pixel 5", // Example of adding other standard device previews
     group = "Standard Devices",
@@ -154,6 +244,20 @@ fun QuestionScreenPreviewDark() {
     }
 }
 
+@Preview(
+    name = "Tablet - Portrait 800x1280",
+    group = "Tablet",
+    device = "spec:width=800dp,height=1280dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Preview(
+    name = "Tablet - Landscape 1280x800",
+    group = "Tablet",
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
 @Preview(name = "Settings - Light", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 fun SettingsScreenPreviewLight() {

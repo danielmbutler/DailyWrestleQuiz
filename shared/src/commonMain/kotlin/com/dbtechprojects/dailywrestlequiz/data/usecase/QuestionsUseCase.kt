@@ -18,6 +18,8 @@ interface QuestionsUseCase {
     suspend fun saveScore(quizId: Int, score: Int)
 
     suspend fun getStreak(): Int
+
+    suspend fun getStreakStartDate(): String?
 }
 
 class QuestionsUseCaseImpl(
@@ -103,6 +105,13 @@ class QuestionsUseCaseImpl(
         return settingsDao.getSettingsFlow().firstOrNull()?.streak ?: 0
     }
 
+    override suspend fun getStreakStartDate(): String? {
+        settingsDao.getSettingsFlow().firstOrNull()?.streakStartDate?.split(" ")?.firstOrNull()?.let {
+            return TimerUtils().formatDate(it)
+        }
+        return null
+    }
+
     private suspend fun updateDailyTriviaStreak(score: Int) {
         if (score > 1) {
             settingsDao.getSettingsFlow().firstOrNull {
@@ -138,5 +147,9 @@ class QuestionUseCaseStub : QuestionsUseCase {
 
     override suspend fun getStreak(): Int {
         return 0
+    }
+
+    override suspend fun getStreakStartDate(): String? {
+        return null
     }
 }

@@ -40,7 +40,9 @@ class QuizViewModelImpl(
     }
 }
 
-class QuizViewModelStub : QuizViewModel {
+class QuizViewModelStub(
+    private val demoQuizzes: List<Quiz>? = null
+) : QuizViewModel {
     private val _isLoading = MutableStateFlow<Boolean>(false)
     private val _quizzes = MutableStateFlow<List<Quiz>>(emptyList())
 
@@ -52,9 +54,8 @@ class QuizViewModelStub : QuizViewModel {
 
 
     init {
-//        vie
-//        _isLoading.value = true
-//        _quizzes.value = QuizUseCaseStub().getQuizzes()
-//        _isLoading.value = false
+        _isLoading.value = true
+        _quizzes.value = demoQuizzes ?: emptyList()
+        _isLoading.value = false
     }
 }
